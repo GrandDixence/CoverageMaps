@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" 
+	  href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.10.0/css/ol.css" type="text/css"
+	  integrity="sha512-Bw0A1Xfoa5A65m3mbHUvn0A7Iw2z2EnWeljpgbrnp9MYs47fS8M6w6M6I6vsmlBBC51qOHFYof/uNxX6OCiX6A=="
+	  crossorigin="anonymous">
+    </link>
+    <link rel="stylesheet" 
+	  href="https://unpkg.com/ol-layerswitcher@3.8.3/dist/ol-layerswitcher.css" type="text/css"
+	  integrity="sha512-MypO2PZIhqWcFU289e9V8MGICWwko1p/a7ETtcSjMD8iAkqgfMD+hFDcHpY6ERV1xsYL5nbo0EuwbNLg4ecpIw=="
+	  crossorigin="anonymous">
+    </link>
+    <style>
+       body {
+           margin: 0;
+           padding: 0
+       }
+      .map {
+          position: absolute;
+          width: 100%;
+          top: 0;
+          bottom: 0;  
+          z-index: 2
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.10.0/build/ol.js"
+	    integrity="sha512-GNGRl8Lxb3q2eVSIlAO1JOmJk0wSeKGRhHSrsw+LTo7wA/0ab0yUP8mEkZVkl2zNtIhXXFif6aN3gsifsrWAjQ=="
+            crossorigin="anonymous">
+    </script>
+    <script src="https://unpkg.com/ol-layerswitcher@3.8.3/dist/ol-layerswitcher.js"
+	    integrity="sha512-+cZhYSrGlO4JafMR5fEFkF+6pXr9fwMaicniLZRH76RtnJXc/+WkFpZu/9Av0rg2xDVr84M15XMA6tet1VaMrg=="
+            crossorigin="anonymous">
+    </script>
+    <title>Radio coverage map</title>
+  </head>
+  <body>
+    <h2>Loading map...</h2>
+    <div id="map" class="map"></div>
+    <script type="text/javascript">
+
+      const center = [7.50, 47.00];
+      const imageExtent = [6.0, 46.0, 8.0, 48.0];
+
+      const transformCenter = ol.proj.transform(center, 'EPSG:4326', 'EPSG:4326');			// Transform coordinates from WGS 84 to WGS 84 (projection of view)
+      const sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+      const viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of view)
+
+      const otmLayer = new ol.layer.Tile({
+	title: 'Open Topo Map',			// LayerSwitcher
+ 	type: 'base',					// LayerSwitcher
+	visible: true,
+        source: new ol.source.OSM({
+	  crossOrigin:  'anonymous',
+          url: 'https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png',
+	  attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+	})
+      });
+
+      const osmLayer = new ol.layer.Tile({
+	title: 'Open Street Map',			// LayerSwitcher
+	type: 'base',					// LayerSwitcher
+	visible: false,
+        source: new ol.source.OSM({
+	  crossOrigin:  'anonymous',
+          url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+	  attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	})
+      });
+
+      const coverageMapLayer = new ol.layer.Image({
+	title: 'Radio coverage map',			// LayerSwitcher
+	zIndex: 3,
+	opacity: 0.4,
+	extent: viewImageExtent, 
+        source: new ol.source.ImageStatic({
+          //crossOrigin: 'anonymous',
+	  imageExtent: sourceImageExtent,
+	  projection: 'EPSG:4326',			// WGS 84
+ 	  url: 'file:///tmp/coveragemap.png',
+	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server'
+	})
+      });
+
+      const map = new ol.Map({
+        target: 'map',
+        layers: [
+	  new ol.layer.Group({
+	    title: 'Base map',
+	    layers: [otmLayer, osmLayer], 
+          }),
+	  new ol.layer.Group({
+	    title: 'Data',
+	    layers: [coverageMapLayer]
+	  }),
+        ],
+        view: new ol.View({
+	  projection: 'EPSG:4326',			// WGS 84
+          center: transformCenter,
+          zoom: 11
+        })
+      });
+
+      const scaleLine = new ol.control.ScaleLine({
+	bar: false
+      });
+
+      const layerSwitcher = new ol.control.LayerSwitcher({
+        groupSelectStyle: 'none'
+      });
+
+      map.addControl(scaleLine);
+      map.addControl(layerSwitcher);
+
+    </script>
+  </body>
+</html>
