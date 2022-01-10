@@ -1,0 +1,2 @@
+/var/mail/Signal-Server/signalserverHD -sdf /home/foo/DEM/vfp -lat 46.68438 -lon 6.35137 -txh 7.0 -erp 1.0 -f 960.0 -pm 2 -rxh 1.5 -dbm -rt -90.0 -m -R 32.0 -o /home/foo/Schreibtisch/Mobilfunk_Vaulion
+convert /home/foo/Schreibtisch/Mobilfunk_Vaulion.ppm -transparent white /home/foo/Schreibtisch/Mobilfunk_Vaulion.png
