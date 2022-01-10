@@ -1,0 +1,3 @@
+/var/mail/Signal-Server/signalserverHD -sdf /home/foo/DEM/vfp -lat 46.43034 -lon 6.12595 -txh 20.0 -erp 4.0 -f 161.3 -pm 2 -rxh 1.5 -dbm -rt -90.0 -m -R 100.0 -o /home/foo/Schreibtisch/REGA_Notruf_La_Dole
+convert /home/foo/Schreibtisch/REGA_Notruf_La_Dole.ppm -transparent white /home/foo/Schreibtisch/REGA_Notruf_La_Dole.png
+
