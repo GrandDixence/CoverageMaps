@@ -1,0 +1,6 @@
+/var/mail/Signal-Server/signalserverHD -sdf ~/DEM/vfp -lat 46.62686 -lon 7.20747 -txh 4.0 -erp 1.0 -f 960.0 -pm 2 -rxh 1.5 -dbm -rt -90.0 -m -R 32.0 -o /tmp/Mobilfunk_Vounetse
+
+|47.000000|8.000000|46.000000|6.000000|
+
+convert /tmp/Mobilfunk_Vounetse.ppm -transparent white /tmp/Mobilfunk_Vounetse.png
+
