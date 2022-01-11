@@ -160,12 +160,12 @@
 	})
       });
 
-/*      imageExtent = [6.0, 45.0, 10.0, 48.0];
+      imageExtent = [6.0, 46.0, 8.0, 48.0];
       sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
       viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const niesenLayer = new ol.layer.Image({
-	title: 'Guggisberg BE - Provider unknown',			// LayerSwitcher
+      const presdOrvinBELayer = new ol.layer.Image({
+	title: 'Prés-dOrvin BE - Provider unknown',			// LayerSwitcher
 	zIndex: 8,
 	opacity: 0.4,
 	visible: false,
@@ -174,17 +174,17 @@
           //crossOrigin: 'anonymous',
 	  imageExtent: sourceImageExtent,
 	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'Mobilfunk_Guggisberg_BE.png',
+ 	  url: 'Mobilfunk_Pres-dOrvin_BE.png',
 	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server'
 	})
       });
 
-      imageExtent = [5.0, 45.0, 10.0, 48.0];
+      imageExtent = [6.0, 46.0, 8.0, 47.0];
       sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
       viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const plaineMorteLayer = new ol.layer.Image({
-	title: 'Guggisberg BE - Provider unknown',			// LayerSwitcher
+      const charmeyFRLayer = new ol.layer.Image({
+	title: 'Charmey - Swisscom',			// LayerSwitcher
 	zIndex: 9,
 	opacity: 0.4,
 	visible: false,
@@ -193,17 +193,17 @@
           //crossOrigin: 'anonymous',
 	  imageExtent: sourceImageExtent,
 	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'Mobilfunk_Guggisberg_BE.png',
+ 	  url: 'Mobilfunk_Charmey_FR.png',
 	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server'
 	})
       });
 
-      imageExtent = [5.0, 45.0, 9.0, 48.0];
+      imageExtent = [6.0, 46.0, 8.0, 47.0];
       sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
       viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const rochersDeNayeLayer = new ol.layer.Image({
-	title: 'Guggisberg BE - Provider unknown',			// LayerSwitcher
+      const vounetseFRLayer = new ol.layer.Image({
+	title: 'Vounetse FR - Swisscom',			// LayerSwitcher
 	zIndex: 10,
 	opacity: 0.4,
 	visible: false,
@@ -212,12 +212,12 @@
           //crossOrigin: 'anonymous',
 	  imageExtent: sourceImageExtent,
 	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'Mobilfunk_Guggisberg_BE.png',
+ 	  url: 'Mobilfunk_Vounetse_FR.png',
 	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server'
 	})
       });
 
-      imageExtent = [6.0, 45.0, 11.0, 48.0];
+/*      imageExtent = [6.0, 45.0, 11.0, 48.0];
       sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
       viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
@@ -245,7 +245,7 @@
           }),
 	  new ol.layer.Group({
 	    title: 'UMTS - Band 8',
-	    layers: [guggisbergBELayer, ottenleuebadBELayer, plasselbschlundFRLayer, rechthaltenFRLayer, vaulionVDLayer]
+	    layers: [guggisbergBELayer, ottenleuebadBELayer, plasselbschlundFRLayer, rechthaltenFRLayer, vaulionVDLayer, presdOrvinBELayer, charmeyFRLayer, vounetseFRLayer]
 	  }),
         ],
         view: new ol.View({
