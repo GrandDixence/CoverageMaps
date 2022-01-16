@@ -111,7 +111,7 @@
 	title: 'Plasselbschlund FR - Swisscom',			// LayerSwitcher
 	zIndex: 5,
 	opacity: 0.4,
-	visible: true,
+	visible: false,
 	extent: viewImageExtent, 
         source: new ol.source.ImageStatic({
           //crossOrigin: 'anonymous',
@@ -217,13 +217,28 @@
 	})
       });
 
-/*      imageExtent = [6.0, 45.0, 11.0, 48.0];
+      imageExtent = [6.0, 46.0, 8.0, 48.0];
       sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
       viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const titlisLayer = new ol.layer.Image({
-	title: 'Guggisberg BE - Provider unknown',			// LayerSwitcher
+      const stockereBELayer = new ol.layer.Image({
+	title: 'Stockere BE - Sunrise',			// LayerSwitcher
 	zIndex: 11,
+	opacity: 0.4,
+	visible: true,
+	extent: viewImageExtent, 
+        source: new ol.source.ImageStatic({
+          //crossOrigin: 'anonymous',
+	  imageExtent: sourceImageExtent,
+	  projection: 'EPSG:4326',			// WGS 84
+ 	  url: 'Mobilfunk_Stockere_BE.png',
+	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server'
+	})
+      }); 
+
+      const lignieresNELayer = new ol.layer.Image({
+	title: 'Lignières NE - Provider unknown',			// LayerSwitcher
+	zIndex: 12,
 	opacity: 0.4,
 	visible: false,
 	extent: viewImageExtent, 
@@ -231,10 +246,10 @@
           //crossOrigin: 'anonymous',
 	  imageExtent: sourceImageExtent,
 	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'Mobilfunk_Guggisberg_BE.png',
+ 	  url: 'Mobilfunk_Lignieres_NE.png',
 	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server'
 	})
-      }); */
+      }); 
 
       const map = new ol.Map({
         target: 'map',
@@ -245,7 +260,7 @@
           }),
 	  new ol.layer.Group({
 	    title: 'UMTS - Band 8',
-	    layers: [guggisbergBELayer, ottenleuebadBELayer, plasselbschlundFRLayer, rechthaltenFRLayer, vaulionVDLayer, presdOrvinBELayer, charmeyFRLayer, vounetseFRLayer]
+	    layers: [guggisbergBELayer, ottenleuebadBELayer, plasselbschlundFRLayer, rechthaltenFRLayer, vaulionVDLayer, presdOrvinBELayer, charmeyFRLayer, vounetseFRLayer, stockereBELayer, lignieresNELayer]
 	  }),
         ],
         view: new ol.View({
