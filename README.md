@@ -63,8 +63,7 @@ Dabei sind die Parameter von Signal-Server zu beachten. Informationen zu den
 Parametern von Signal-Server erhält man beim Programmaufruf ohne Parameter:
 
 ```
-# cd /var/mail/Signal-Server/
-# ./signalserver
+# signalserver
 ```
 
 Hier einige Beispiele vom Programmaufruf von Signal-Server:
@@ -72,29 +71,25 @@ Hier einige Beispiele vom Programmaufruf von Signal-Server:
 - Netzabdeckungskarte berechnen (Normalauflösung: 90 Meter/3 Bogensekunden)
 
 ```
-# cd /var/mail/Signal-Server/
-# ./signalserver -dbg -sdf ~/DEM/vfp -m -dbm -erp 1.0 -rt -90 -f 446.2 -R 100 -pm 2 -lat 46.5466 -lon 7.0186 -txh 1.0 -rxh 1.0 -o /tmp/Test_Netzabdeckung
+# signalserver -dbg -sdf ~/DEM/vfp -m -dbm -erp 1.0 -rt -90 -f 446.2 -R 100 -pm 2 -lat 46.5466 -lon 7.0186 -txh 1.0 -rxh 1.0 -o /tmp/Test_Netzabdeckung
 ```
 
 - Sichtverbindung kontrollieren und Fresnelzone berechnen (Normalauflösung: 90 Meter/3 Bogensekunden)
 
 ```
-# cd /var/mail/Signal-Server/
-# ./signalserver -ng -dbg -sdf ~/DEM/vfp -m -dbm -erp 1.0 -rt -90 -f 6000.0 -R 100 -pm 2 -lat 46.5466573 -lon 7.0186223 -txh 1.0 -rla 46.6043527 -rlo 7.3164414 -rxh 1.0 -o /tmp/Test_Richstrahl
+# signalserver -ng -dbg -sdf ~/DEM/vfp -m -dbm -erp 1.0 -rt -90 -f 6000.0 -R 100 -pm 2 -lat 46.5466573 -lon 7.0186223 -txh 1.0 -rla 46.6043527 -rlo 7.3164414 -rxh 1.0 -o /tmp/Test_Richstrahl
 ```
 
 - Netzabdeckungskarte berechnen (Hoch auflösend: 30 Meter/1 Bogensekunde)
 
 ```
-# cd /var/mail/Signal-Server/
-# ./signalserverHD -dbg -sdf ~/DEM/vfp -m -dbm -erp 1.0 -rt -90 -f 446.2 -R 100 -pm 2 -lat 46.5466 -lon 7.0186 -txh 1.0 -rxh 1.0 -o /tmp/Test_Netzabdeckung_HD
+# signalserverHD -dbg -sdf ~/DEM/vfp -m -dbm -erp 1.0 -rt -90 -f 446.2 -R 100 -pm 2 -lat 46.5466 -lon 7.0186 -txh 1.0 -rxh 1.0 -o /tmp/Test_Netzabdeckung_HD
 ```
 
 - Sichtverbindung kontrollieren und Fresnelzone berechnen (Hoch auflösend: 30 Meter/1 Bogensekunde)
 
 ```
-# cd /var/mail/Signal-Server/
-# ./signalserverHD -ng -dbg -sdf ~/DEM/vfp -m -dbm -erp 1.0 -rt -90 -f 6000.0 -R 100 -pm 2 -lat 46.5466573 -lon 7.0186223 -txh 1.0 -rla 46.6043527 -rlo 7.3164414 -rxh 1.0 -o /tmp/Test_Richstrahl_HD
+# signalserverHD -ng -dbg -sdf ~/DEM/vfp -m -dbm -erp 1.0 -rt -90 -f 6000.0 -R 100 -pm 2 -lat 46.5466573 -lon 7.0186223 -txh 1.0 -rla 46.6043527 -rlo 7.3164414 -rxh 1.0 -o /tmp/Test_Richstrahl_HD
 ```
 
 > Beim Aufruf von Signal-Server ist zu beachten, dass beim Parameter "-o"
@@ -194,6 +189,15 @@ muss die Dateiendung angepasst werden:
 Dieses ZIP-Archiv mit der Dateiendung `(*.kmz)` kann dann Google Earth als 
 Projekt "gefüttert" werden. Siehe dazu das Kapitel "Google Earth".
 
+Die Erstellung von *.kmz-Dateien kann auch automatisiert werden. Siehe dazu 
+den Inhalt vom Unterverzeichnis:
+
+```
+output/GoogleEarth
+```
+
+der Signal-Server-Installation.
+
 
 Google Earth
 --------------------------------------------------------------------------------
@@ -221,6 +225,15 @@ Alternativ zu Google Earth kann die Darstellung mit Kartenmaterial von
 Open Street Map (OSM) im Webbrowser erfolgen. 
 
 https://de.wikipedia.org/wiki/OpenStreetMap
+
+Einige nette Beispiel von Netzabdeckungskarten mit der Darstellung auf Basis
+von "Open Street Map"-Kartenmaterial (OSM) findet man im Unterverzeichnis: 
+
+```
+output/OpenLayers
+```
+
+der Signal-Server-Installation.
 
 Die in diesem Kapitel vorgestellte Lösung erlaubt die Darstellung mit diesem 
 Kartenmaterial:
@@ -364,37 +377,27 @@ https://de.wikipedia.org/wiki/Fresnelzone
 
 Signal-Server wurde in der Programmiersprache C/C++ geschrieben. 
 
-Getester Git-Stand:  `8dc0a43  vom 13.07.2021`
+Getester Git-Stand:  `11f992c vom 03.02.2022`
 
 Anforderungen:
-- Linux
-- ImageMagick
-- C/C++-Compiler: GCC,G++ oder clang
+- C++14 konformer C++ Compiler (GCC,G++ / clang)
+- Build-Umgebung für C++ (Linker, C++ Standardbibliothek und so weiter)
+- CMake v3.5 oder neuer
+- Convert (Teil von ImageMagick)
+- Für einige zusätzliche Skripte: Bash und Python-Interpreter
+- Einige dynamische Programmbibliotheken (Shared library/DLL):
+  pthread: POSIX threads library
+  bz2:     The bzip2 runtime library
+  dl:      Open and close a shared object - POSIX conform
+  z:       zlib is a general-purpose lossless data-compression library
 
 ```
 # git clone https://github.com/Cloud-RF/Signal-Server /var/mail/Signal-Server/
 # cd /var/mail/Signal-Server/
 # cd src
+# cmake .
 # make 
-# make install
-# make clean
-```
-
-Ein wenig Git-Pflege betreiben:
-
-```
-# touch /var/mail/Signal-Server/.gitignore
-# vim /var/mail/Signal-Server/.gitignore
-
-signalserver
-signalserverHD
-signalserverLIDAR
-utils/sdf/usgs2sdf/srtm2sdf
-utils/sdf/usgs2sdf/srtm2sdf-hd
-
-# cd /var/mail/Signal-Server/
-# git status
-# git diff
+# sudo make install
 ```
 
 
@@ -438,29 +441,18 @@ Die im Lieferumfang von Signal-Server enthaltene Konverterprogramme für die
 Höhenmodelle kompilieren:
 
 ```
-# cd /var/mail/Signal-Server/utils/sdf/usgs2sdf
-# ./build srtm2sdf
-```
-
-Bash-Skript anpassen (Leerschläge am Zeilenanfang beachten!):
-
-```
-# vim /var/mail/Signal-Server/utils/sdf/convert_sdf.sh
-```
-
-```
-#!/bin/bash
-for file in *.hgt
- do
- /var/mail/Signal-Server/utils/sdf/usgs2sdf/srtm2sdf -d /dev/null $file
- done
+# cd /var/mail/Signal-Server/
+# cd utils/sdf/usgs2sdf
+# cmake .
+# make 
+# sudo make install
 ```
 
 Höhenmodelle im HGT-Format `(*.hgt)` ins SDF-Format `(*.sdf)` umwandeln:
 
 ```
 # cd ~/DEM/vfp
-# /var/mail/Signal-Server/utils/sdf/convert_sdf.sh 
+# convert_sdf.sh 
 ```
 
 Nach der Konvertierung müssen die Höhenmodelle diese Schreibweise für den 
@@ -510,25 +502,11 @@ Diese HGT-Dateien im Verzeichnis:
 
 ablegen.
 
-Bash-Skript anpassen (Leerschläge am Zeilenanfang beachten!):
-
-```
-# vim /var/mail/Signal-Server/utils/sdf/convert_sdf_hd.sh
-```
-
-```
-#!/bin/bash
-for file in *.hgt
- do
- /var/mail/Signal-Server/utils/sdf/usgs2sdf/srtm2sdf-hd -d /dev/null $file
- done
-```
-
 Höhenmodelle im HGT-Format `(*.hgt)` ins SDF-Format `(*-hd.sdf)` umwandeln:
 
 ```
 # cd ~/DEM/vfp
-# /var/mail/Signal-Server/utils/sdf/convert_sdf_hd.sh 
+# convert_sdf_hd.sh 
 ```
 
 
@@ -538,6 +516,12 @@ Signal-Server deinstallieren:
 
 ```
 # rm -R /var/mail/Signal-Server/
+# rm /usr/local/bin/signalserver
+# rm /usr/local/bin/signalserverHD
+# rm /usr/local/bin/signalserverLIDAR
+# rm /usr/local/bin/usgs2sdf
+# rm /usr/local/bin/srtm2sdf
+# rm /usr/local/bin/srtm2sdf-hd
 ```
 
 ImageMagick deinstallieren.
