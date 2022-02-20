@@ -472,6 +472,10 @@ lb  Ende Längengrad    (zum Beispiel:   8° E -> 352)
 Installation von Signal-Server und die Höhenmodelle testen mit einigen Aufrufen 
 ohne Bedienoberfläche (GUI). Siehe dazu Kapitel "Programmstart".
 
+Im Zusammenhang mit den Höhenmodellen kann auch der Einsatz einer Webseite zur
+Berechnung des Bergpanoramas sinnvoll sein. Zum Beispiel:
+
+https://www.udeuschle.de/panoramas/makepanoramas.htm
 
 
 Installation von hochauflösenden Höhenmodelle

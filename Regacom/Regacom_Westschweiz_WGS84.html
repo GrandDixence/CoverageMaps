@@ -256,6 +256,25 @@
 	})
       });
 
+      imageExtent = [6.0, 45.0, 10.0, 49.0];
+      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of view)
+
+      const pilatusLayer = new ol.layer.Image({
+	title: 'Pilatus - Regacom',			// LayerSwitcher
+	zIndex: 13,
+	opacity: 0.4,
+	visible: false,
+	extent: viewImageExtent, 
+        source: new ol.source.ImageStatic({
+          //crossOrigin: 'anonymous',
+	  imageExtent: sourceImageExtent,
+	  projection: 'EPSG:4326',			// WGS 84
+ 	  url: 'REGA_Notruf_Pilatus.png',
+	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server'
+	})
+      });
+
       const map = new ol.Map({
         target: 'map',
         layers: [
@@ -265,7 +284,7 @@
           }),
 	  new ol.layer.Group({
 	    title: '161.300 MHz - Emergency radio channel',
-	    layers: [bantigerLayer, brienzerRothornLayer, chasseralLayer, jungfraujochLayer, laDoleLayer, niesenLayer, plaineMorteLayer, rochersDeNayeLayer, titlisLayer, lesOrdonsLayer]
+	    layers: [bantigerLayer, brienzerRothornLayer, chasseralLayer, jungfraujochLayer, laDoleLayer, niesenLayer, plaineMorteLayer, rochersDeNayeLayer, titlisLayer, lesOrdonsLayer, pilatusLayer]
 	  }),
         ],
         view: new ol.View({
