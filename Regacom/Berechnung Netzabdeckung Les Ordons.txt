@@ -1,0 +1,3 @@
+signalserverHD -sdf ~/DEM/vfp -lat 47.38791 -lon 7.23136 -txh 16.0 -erp 4.0 -f 161.3 -pm 2 -rxh 1.5 -dbm -rt -90.0 -m -R 100.0 -o /tmp/REGA_Notruf_Les_Ordons
+convert /tmp/REGA_Notruf_Les_Ordons.ppm -transparent white /tmp/REGA_Notruf_Les_Ordons.png
+
