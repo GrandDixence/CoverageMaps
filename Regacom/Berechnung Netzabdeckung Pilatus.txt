@@ -1,0 +1,3 @@
+signalserverHD -sdf ~/DEM/vfp -lat 46.97919 -lon 8.25625 -txh 4.0 -erp 4.0 -f 161.3 -pm 2 -rxh 1.5 -dbm -rt -90.0 -m -R 100.0 -o /tmp/REGA_Notruf_Pilatus
+convert /tmp/REGA_Notruf_Pilatus.ppm -transparent white /tmp/REGA_Notruf_Pilatus.png
+
