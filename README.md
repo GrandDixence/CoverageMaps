@@ -396,8 +396,8 @@ Anforderungen:
 # cd /var/mail/Signal-Server/
 # cd src
 # cmake .
-# make 
-# sudo make install
+# cmake --build .
+# sudo cmake --build . --target install
 ```
 
 
@@ -444,8 +444,8 @@ Höhenmodelle kompilieren:
 # cd /var/mail/Signal-Server/
 # cd utils/sdf/usgs2sdf
 # cmake .
-# make 
-# sudo make install
+# cmake --build .
+# sudo cmake --build . --target install
 ```
 
 Höhenmodelle im HGT-Format `(*.hgt)` ins SDF-Format `(*.sdf)` umwandeln:
