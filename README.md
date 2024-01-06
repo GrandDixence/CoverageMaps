@@ -371,7 +371,7 @@ Installation Signal-Server
 Signal-Server berechnet die Netzabdeckungskarten und die Sichtverbindungen (P2P)
 und deren Fresnelzonen.
 
-https://github.com/Cloud-RF/Signal-Server
+https://github.com/GrandDixence/Signal-Server
 
 https://de.wikipedia.org/wiki/Fresnelzone
 
@@ -392,7 +392,7 @@ Anforderungen:
   z:       zlib is a general-purpose lossless data-compression library
 
 ```
-# git clone https://github.com/Cloud-RF/Signal-Server /var/mail/Signal-Server/
+# git clone https://github.com/GrandDixence/Signal-Server /var/mail/Signal-Server/
 # cd /var/mail/Signal-Server/
 # cd src
 # cmake .
@@ -420,7 +420,7 @@ Signal-Server unterstützt für das Höhenmodell mehrere verschiedene Datenforma
 Mehr Informationen zu den von Signal-Server unterstützten Datenformate bietet
 die README.md-Datei von Signal-Server:
 
-https://github.com/Cloud-RF/Signal-Server#readme
+https://github.com/GrandDixence/Signal-Server#readme
 
 Höhenmodelle für den weltweiten Einsatz mit normaler Auflösung (90 Meter; 
 3 Bogensekunden) können von der Webseite von ViewFinderPanorma (VFP) im 
