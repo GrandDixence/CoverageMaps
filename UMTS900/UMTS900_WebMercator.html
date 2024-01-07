@@ -77,6 +77,18 @@
 	})
       });
       
+      const swissTopoPixelKarteGrau = new ol.layer.Tile({
+	title: 'Swiss Topo - Grey Map',			// LayerSwitcher
+	type: 'base',					// LayerSwitcher
+	visible: false,
+        source: new ol.source.XYZ({
+	  crossOrigin:  'anonymous',
+	  projection: 'EPSG:3857',		// Web Mercator
+          url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg',
+	  attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">Swisstopo</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
+	})
+      });      
+      
       const swissTopoSwissImage = new ol.layer.Tile({
 	title: 'Swiss Topo - Aerial imagery',			// LayerSwitcher
 	type: 'base',					// LayerSwitcher
@@ -280,7 +292,7 @@
         layers: [
 	  new ol.layer.Group({
 	    title: 'Base map',
-	    layers: [swissTopoPixelKarteFarbe, swissTopoSwissImage, otmLayer, osmLayer], 
+	    layers: [swissTopoPixelKarteFarbe, swissTopoPixelKarteGrau, swissTopoSwissImage, otmLayer, osmLayer], 
           }),
 	  new ol.layer.Group({
 	    title: 'UMTS - Band 8',
