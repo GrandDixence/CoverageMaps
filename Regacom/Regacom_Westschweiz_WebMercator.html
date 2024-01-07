@@ -1,347 +1,345 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" 
-	  href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css" type="text/css"
-	  integrity="sha512-VW0BZX/F8iCSJ3tnd/7IEVoHjVFabVrgtFUk1rmPoBMhJYus9cekwSiBhqFYJ5TaICYFx0ZY9sKSbrv7mOV3MA=="
-	  crossorigin="anonymous">
-    </link>
-    <link rel="stylesheet" 
-	  href="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.css" type="text/css"
-	  integrity="sha512-jWH+Sv0cQTyzP+V11hZaZgoJ9TxRfyS9/apjXsmLohioXCMze5w9C+pM7KIAuLdU4hvVhHW6YB64gJ8SKbWBfA=="
-	  crossorigin="anonymous">
-    </link>
-    <style>
-       body {
-           margin: 0;
-           padding: 0
-       }
-      .map {
-          position: absolute;
-          width: 100%;
-          top: 0;
-          bottom: 0;  
-          z-index: 2
-      }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"
-	    integrity="sha512-zcRdjTuLRJPIXiyXpHwGxbw5/meqPWTVO8Bko9XL6qmwSaPiFe9R1/xBmba4RjWzFzT8e+dNqIWDCa6gdEgajw=="
-            crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.0.0/dist/ol-layerswitcher.js"
-	    integrity="sha512-vTZfK/QA+2mdjJU/AYvJJqZipymv81D7WuEF4n6gr9udJnfPtLmXnUBfGsRaWbSj2ERSSBzPRvVL340ePCIESQ=="
-            crossorigin="anonymous">
-    </script>
-    <title>E-channel 161.300 MHz</title>
-  </head>
-  <body>
-    <h2>Loading map...</h2>
-    <div id="map" class="map"></div>
-    <script type="text/javascript">
+	<head>
+    	<meta charset="utf-8">
+    	<link rel="stylesheet" 
+	  		href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css" type="text/css"
+	  		integrity="sha512-VW0BZX/F8iCSJ3tnd/7IEVoHjVFabVrgtFUk1rmPoBMhJYus9cekwSiBhqFYJ5TaICYFx0ZY9sKSbrv7mOV3MA=="
+	  		crossorigin="anonymous">
+    	</link>
+    	<link rel="stylesheet" 
+	  		href="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.css" type="text/css"
+	  		integrity="sha512-jWH+Sv0cQTyzP+V11hZaZgoJ9TxRfyS9/apjXsmLohioXCMze5w9C+pM7KIAuLdU4hvVhHW6YB64gJ8SKbWBfA=="
+	  		crossorigin="anonymous">
+    	</link>
+    	<style>
+    		body {
+        		margin: 0;
+        		padding: 0
+       		}
+      		.map {
+        		position: absolute;
+        		width: 100%;
+        		top: 0;
+        		bottom: 0;  
+        		z-index: 2
+    		}
+    	</style>
+		<script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"
+			integrity="sha512-zcRdjTuLRJPIXiyXpHwGxbw5/meqPWTVO8Bko9XL6qmwSaPiFe9R1/xBmba4RjWzFzT8e+dNqIWDCa6gdEgajw=="
+			crossorigin="anonymous">
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.0.0/dist/ol-layerswitcher.js"
+			integrity="sha512-vTZfK/QA+2mdjJU/AYvJJqZipymv81D7WuEF4n6gr9udJnfPtLmXnUBfGsRaWbSj2ERSSBzPRvVL340ePCIESQ=="
+			crossorigin="anonymous">
+		</script>
+		<title>E-channel 161.300 MHz</title>
+	</head>
+	<body>
+    	<h1>Loading map...</h1>
+    	<div id="map" class="map"></div>
+    	<script type="text/javascript">
 
-      const center = [7.50, 47.00];
-      const transformCenter = ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857');			// Transform coordinates from WGS 84 to Web Mercator (projection of view)
+      		const center = [7.50, 47.00];
+      		const transformCenter = ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857');			// Transform coordinates from WGS 84 to Web Mercator (projection of view)
 
+      		const otmLayer = new ol.layer.Tile({
+				title: 'Open Topo Map',			// LayerSwitcher
+ 				type: 'base',					// LayerSwitcher
+				visible: false,
+        		source: new ol.source.OSM({
+	  				crossOrigin:  'anonymous',
+          			url: 'https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png',
+	  				attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+				})
+			});
 
-      const otmLayer = new ol.layer.Tile({
-	title: 'Open Topo Map',			// LayerSwitcher
- 	type: 'base',					// LayerSwitcher
-	visible: false,
-        source: new ol.source.OSM({
-	  crossOrigin:  'anonymous',
-          url: 'https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png',
-	  attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-	})
-      });
-
-      const osmLayer = new ol.layer.Tile({
-	title: 'Open Street Map',			// LayerSwitcher
-	type: 'base',					// LayerSwitcher
-	visible: false,
-        source: new ol.source.OSM({
-	  crossOrigin:  'anonymous',
-          url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-	  attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	})
-      });
+      		const osmLayer = new ol.layer.Tile({
+				title: 'Open Street Map',			// LayerSwitcher
+				type: 'base',					// LayerSwitcher
+				visible: false,
+        		source: new ol.source.OSM({
+					crossOrigin:  'anonymous',
+					url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+					attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+				})
+			});
       
-      const swissTopoPixelKarteFarbe = new ol.layer.Tile({
-	title: 'Swiss Topo - Color Map',			// LayerSwitcher
-	type: 'base',					// LayerSwitcher
-	visible: true,
-        source: new ol.source.XYZ({
-	  crossOrigin:  'anonymous',
-	  projection: 'EPSG:3857',		// Web Mercator
-          url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg',
-	  attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">Swisstopo</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
-	})
-      });
+      		const swissTopoPixelKarteFarbe = new ol.layer.Tile({
+				title: 'Swiss Topo - Color Map',			// LayerSwitcher
+				type: 'base',					// LayerSwitcher
+				visible: true,
+        		source: new ol.source.XYZ({
+	  				crossOrigin:  'anonymous',
+	  				projection: 'EPSG:3857',		// Web Mercator
+          			url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg',
+	  				attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">Swisstopo</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
+				})
+			});
       
-      const swissTopoPixelKarteGrau = new ol.layer.Tile({
-	title: 'Swiss Topo - Grey Map',			// LayerSwitcher
-	type: 'base',					// LayerSwitcher
-	visible: false,
-        source: new ol.source.XYZ({
-	  crossOrigin:  'anonymous',
-	  projection: 'EPSG:3857',		// Web Mercator
-          url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg',
-	  attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">Swisstopo</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
-	})
-      });      
+      		const swissTopoPixelKarteGrau = new ol.layer.Tile({
+				title: 'Swiss Topo - Grey Map',			// LayerSwitcher
+				type: 'base',					// LayerSwitcher
+				visible: false,
+        		source: new ol.source.XYZ({
+					crossOrigin:  'anonymous',
+	  				projection: 'EPSG:3857',		// Web Mercator
+          			url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg',
+	  				attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">Swisstopo</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
+				})
+			});      
       
-      const swissTopoSwissImage = new ol.layer.Tile({
-	title: 'Swiss Topo - Aerial imagery',			// LayerSwitcher
-	type: 'base',					// LayerSwitcher
-	visible: false,
-        source: new ol.source.XYZ({
-	  crossOrigin:  'anonymous',
-	  projection: 'EPSG:3857',		// Web Mercator
-          url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg',
-	  attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">CNES, Spot Image, Swisstopo, NPOC</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
-	})
-      });      
+			const swissTopoSwissImage = new ol.layer.Tile({
+				title: 'Swiss Topo - Aerial imagery',			// LayerSwitcher
+				type: 'base',					// LayerSwitcher
+				visible: false,
+        		source: new ol.source.XYZ({
+	  				crossOrigin:  'anonymous',
+					projection: 'EPSG:3857',		// Web Mercator
+          			url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg',
+	  				attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">CNES, Spot Image, Swisstopo, NPOC</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
+				})
+      		});      
 
-      let imageExtent = [5.0, 45.0, 10.0, 49.0];
-      let sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      let viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			let imageExtent = [5.0, 45.0, 10.0, 49.0];
+			let sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+			let viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const bantigerLayer = new ol.layer.Image({
-	title: 'Bantiger - Regacom',			// LayerSwitcher
-	zIndex: 3,
-	opacity: 0.4,
-	extent: viewImageExtent, 
-	visible: false,
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Bantiger.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+			const bantigerLayer = new ol.layer.Image({
+				title: 'Bantiger - Regacom',			// LayerSwitcher
+				zIndex: 3,
+				opacity: 0.4,
+				extent: viewImageExtent, 
+				visible: false,
+				source: new ol.source.ImageStatic({
+          			//crossOrigin: 'anonymous',
+	  				imageExtent: sourceImageExtent,
+	  				projection: 'EPSG:4326',			// WGS 84
+ 	  				url: 'REGA_Notruf_Bantiger.png',
+	  				attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+			});
 
-      imageExtent = [6.0, 45.0, 10.0, 48.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [6.0, 45.0, 10.0, 48.0];
+      		sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+      		viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const brienzerRothornLayer = new ol.layer.Image({
-	title: 'Brienzer Rothorn - Regacom',			// LayerSwitcher
-	zIndex: 4,
-	opacity: 0.4,
-	visible: false,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Brienzer_Rothorn.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+      		const brienzerRothornLayer = new ol.layer.Image({
+				title: 'Brienzer Rothorn - Regacom',			// LayerSwitcher
+				zIndex: 4,
+				opacity: 0.4,
+				visible: false,
+				extent: viewImageExtent, 
+        		source: new ol.source.ImageStatic({
+					//crossOrigin: 'anonymous',
+					imageExtent: sourceImageExtent,
+					projection: 'EPSG:4326',			// WGS 84
+					url: 'REGA_Notruf_Brienzer_Rothorn.png',
+					attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+			});
 
-      imageExtent = [5.0, 46.0, 9.0, 49.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [5.0, 46.0, 9.0, 49.0];
+			sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+			viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
       
-      const chasseralLayer = new ol.layer.Image({
-	title: 'Chasseral - Regacom',			// LayerSwitcher
-	zIndex: 5,
-	opacity: 0.4,
-	visible: true,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Chasseral.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+			const chasseralLayer = new ol.layer.Image({
+				title: 'Chasseral - Regacom',			// LayerSwitcher
+				zIndex: 5,
+				opacity: 0.4,
+				visible: true,
+				extent: viewImageExtent, 
+				source: new ol.source.ImageStatic({
+					//crossOrigin: 'anonymous',
+					imageExtent: sourceImageExtent,
+					projection: 'EPSG:4326',			// WGS 84
+					url: 'REGA_Notruf_Chasseral.png',
+					attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+			});
       
-      imageExtent = [6.0, 45.0, 10.0, 48.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [6.0, 45.0, 10.0, 48.0];
+      		sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+      		viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const jungfraujochLayer = new ol.layer.Image({
-	title: 'Jungfraujoch - Regacom',			// LayerSwitcher
-	zIndex: 6,
-	opacity: 0.4,
-	visible: false,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Jungfraujoch.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+      		const jungfraujochLayer = new ol.layer.Image({
+				title: 'Jungfraujoch - Regacom',			// LayerSwitcher
+				zIndex: 6,
+				opacity: 0.4,
+				visible: false,
+				extent: viewImageExtent, 
+        		source: new ol.source.ImageStatic({
+          			//crossOrigin: 'anonymous',
+	  				imageExtent: sourceImageExtent,
+	  				projection: 'EPSG:4326',			// WGS 84
+ 	  				url: 'REGA_Notruf_Jungfraujoch.png',
+	  				attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+			});
 
-      imageExtent = [4.0, 45.0, 8.0, 48.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [4.0, 45.0, 8.0, 48.0];
+			sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+			viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const laDoleLayer = new ol.layer.Image({
-	title: 'La Dôle - Regacom',			// LayerSwitcher
-	zIndex: 7,
-	opacity: 0.4,
-	visible: false,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_La_Dole.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+      		const laDoleLayer = new ol.layer.Image({
+				title: 'La Dôle - Regacom',			// LayerSwitcher
+				zIndex: 7,
+				opacity: 0.4,
+				visible: false,
+				extent: viewImageExtent, 
+        		source: new ol.source.ImageStatic({
+          			//crossOrigin: 'anonymous',
+	  				imageExtent: sourceImageExtent,
+	  				projection: 'EPSG:4326',			// WGS 84
+ 	  				url: 'REGA_Notruf_La_Dole.png',
+	  				attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+      		});
 
-      imageExtent = [6.0, 45.0, 10.0, 48.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [6.0, 45.0, 10.0, 48.0];
+      		sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+      		viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const niesenLayer = new ol.layer.Image({
-	title: 'Niesen - Regacom',			// LayerSwitcher
-	zIndex: 8,
-	opacity: 0.4,
-	visible: false,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Niesen.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+      		const niesenLayer = new ol.layer.Image({
+				title: 'Niesen - Regacom',			// LayerSwitcher
+				zIndex: 8,
+				opacity: 0.4,
+				visible: false,
+				extent: viewImageExtent, 
+        		source: new ol.source.ImageStatic({
+          			//crossOrigin: 'anonymous',
+					imageExtent: sourceImageExtent,
+					projection: 'EPSG:4326',			// WGS 84
+					url: 'REGA_Notruf_Niesen.png',
+	  				attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+      		});
 
-      imageExtent = [5.0, 45.0, 10.0, 48.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [5.0, 45.0, 10.0, 48.0];
+			sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+			viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const plaineMorteLayer = new ol.layer.Image({
-	title: 'Plaine Morte - Regacom',			// LayerSwitcher
-	zIndex: 9,
-	opacity: 0.4,
-	visible: false,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Plaine_Morte.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+			const plaineMorteLayer = new ol.layer.Image({
+				title: 'Plaine Morte - Regacom',			// LayerSwitcher
+				zIndex: 9,
+				opacity: 0.4,
+				visible: false,
+				extent: viewImageExtent, 
+        		source: new ol.source.ImageStatic({
+          			//crossOrigin: 'anonymous',
+					imageExtent: sourceImageExtent,
+					projection: 'EPSG:4326',			// WGS 84
+					url: 'REGA_Notruf_Plaine_Morte.png',
+					attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+			});
 
-      imageExtent = [5.0, 45.0, 9.0, 48.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [5.0, 45.0, 9.0, 48.0];
+			sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+			viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const rochersDeNayeLayer = new ol.layer.Image({
-	title: 'Rochers de Naye - Regacom',			// LayerSwitcher
-	zIndex: 10,
-	opacity: 0.4,
-	visible: false,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Rochers_de_Naye.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+      		const rochersDeNayeLayer = new ol.layer.Image({
+				title: 'Rochers de Naye - Regacom',			// LayerSwitcher
+				zIndex: 10,
+				opacity: 0.4,
+				visible: false,
+				extent: viewImageExtent, 
+        		source: new ol.source.ImageStatic({
+          			//crossOrigin: 'anonymous',
+	  				imageExtent: sourceImageExtent,
+	  				projection: 'EPSG:4326',			// WGS 84
+ 	  				url: 'REGA_Notruf_Rochers_de_Naye.png',
+	  				attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+			});
 
-      imageExtent = [6.0, 45.0, 11.0, 48.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [6.0, 45.0, 11.0, 48.0];
+			sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+			viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const titlisLayer = new ol.layer.Image({
-	title: 'Titlis - Regacom',			// LayerSwitcher
-	zIndex: 11,
-	opacity: 0.4,
-	visible: false,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Titlis.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+			const titlisLayer = new ol.layer.Image({
+				title: 'Titlis - Regacom',			// LayerSwitcher
+				zIndex: 11,
+				opacity: 0.4,
+				visible: false,
+				extent: viewImageExtent, 
+        		source: new ol.source.ImageStatic({
+          			//crossOrigin: 'anonymous',
+	  				imageExtent: sourceImageExtent,
+	  				projection: 'EPSG:4326',			// WGS 84
+ 	  				url: 'REGA_Notruf_Titlis.png',
+	  				attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+			});
 
-      imageExtent = [5.0, 46.0, 9.0, 49.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [5.0, 46.0, 9.0, 49.0];
+			sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+			viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const lesOrdonsLayer = new ol.layer.Image({
-	title: 'Les Ordons - Regacom',			// LayerSwitcher
-	zIndex: 12,
-	opacity: 0.4,
-	visible: false,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Les_Ordons.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+			const lesOrdonsLayer = new ol.layer.Image({
+				title: 'Les Ordons - Regacom',			// LayerSwitcher
+				zIndex: 12,
+				opacity: 0.4,
+				visible: false,
+				extent: viewImageExtent, 
+        		source: new ol.source.ImageStatic({
+					//crossOrigin: 'anonymous',
+					imageExtent: sourceImageExtent,
+					projection: 'EPSG:4326',			// WGS 84
+					url: 'REGA_Notruf_Les_Ordons.png',
+					attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+			});
 
-      imageExtent = [6.0, 45.0, 10.0, 49.0];
-      sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
+			imageExtent = [6.0, 45.0, 10.0, 49.0];
+			sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
+			viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
-      const pilatusLayer = new ol.layer.Image({
-	title: 'Pilatus - Regacom',			// LayerSwitcher
-	zIndex: 13,
-	opacity: 0.4,
-	visible: false,
-	extent: viewImageExtent, 
-        source: new ol.source.ImageStatic({
-          //crossOrigin: 'anonymous',
-	  imageExtent: sourceImageExtent,
-	  projection: 'EPSG:4326',			// WGS 84
- 	  url: 'REGA_Notruf_Pilatus.png',
-	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
-	})
-      });
+      		const pilatusLayer = new ol.layer.Image({
+				title: 'Pilatus - Regacom',			// LayerSwitcher
+				zIndex: 13,
+				opacity: 0.4,
+				visible: false,
+				extent: viewImageExtent, 
+        		source: new ol.source.ImageStatic({
+					//crossOrigin: 'anonymous',
+					imageExtent: sourceImageExtent,
+					projection: 'EPSG:4326',			// WGS 84
+					url: 'REGA_Notruf_Pilatus.png',
+					attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
+				})
+			});
 
-      const map = new ol.Map({
-        target: 'map',
-        layers: [
-	  new ol.layer.Group({
-	    title: 'Base map',
-	    layers: [swissTopoPixelKarteFarbe, swissTopoPixelKarteGrau, swissTopoSwissImage, otmLayer, osmLayer],
-          }),
-	  new ol.layer.Group({
-	    title: '161.300 MHz - Emergency radio channel',
-	    layers: [bantigerLayer, brienzerRothornLayer, chasseralLayer, jungfraujochLayer, laDoleLayer, niesenLayer, plaineMorteLayer, rochersDeNayeLayer, titlisLayer, lesOrdonsLayer, pilatusLayer]
-	  }),
-        ],
-        view: new ol.View({
-	    projection: 'EPSG:3857',			// Web Mercator
-          center: transformCenter,
-          zoom: 11
-        })
-      });
+			const map = new ol.Map({
+        		target: 'map',
+        		layers: [
+					new ol.layer.Group({
+						title: 'Base map',
+						layers: [swissTopoPixelKarteFarbe, swissTopoPixelKarteGrau, swissTopoSwissImage, otmLayer, osmLayer],
+					}),
+	  				new ol.layer.Group({
+	    				title: '161.300 MHz - Emergency radio channel',
+	    				layers: [bantigerLayer, brienzerRothornLayer, chasseralLayer, jungfraujochLayer, laDoleLayer, niesenLayer, plaineMorteLayer, rochersDeNayeLayer, titlisLayer, lesOrdonsLayer, pilatusLayer]
+					}),
+				],
+        		view: new ol.View({
+	    			projection: 'EPSG:3857',			// Web Mercator
+          			center: transformCenter,
+          			zoom: 11
+				})
+			});
 
-      const scaleLine = new ol.control.ScaleLine({
-	bar: false
-      });
+			const scaleLine = new ol.control.ScaleLine({
+				bar: false
+			});
 
-      const layerSwitcher = new ol.control.LayerSwitcher({
-        groupSelectStyle: 'none',
-	reverse: false
-      });
+			const layerSwitcher = new ol.control.LayerSwitcher({
+				groupSelectStyle: 'none',
+				reverse: false
+			});
 
-      map.addControl(scaleLine);
-      map.addControl(layerSwitcher);
-
-    </script>
-  </body>
+			map.addControl(scaleLine);
+			map.addControl(layerSwitcher);
+		</script>
+	</body>
 </html>
