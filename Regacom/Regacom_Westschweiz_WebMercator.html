@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
     	<meta charset="utf-8">
+		<meta name="referrer" content="strict-origin-when-cross-origin" />
     	<link rel="stylesheet" 
 	  		href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css" type="text/css"
 	  		integrity="sha512-VW0BZX/F8iCSJ3tnd/7IEVoHjVFabVrgtFUk1rmPoBMhJYus9cekwSiBhqFYJ5TaICYFx0ZY9sKSbrv7mOV3MA=="
@@ -43,63 +44,63 @@
       		const center = [7.50, 47.00];
       		const transformCenter = ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857');			// Transform coordinates from WGS 84 to Web Mercator (projection of view)
 
-      		const otmLayer = new ol.layer.Tile({
+			  const otmLayer = new ol.layer.Tile({
 				title: 'Open Topo Map',			// LayerSwitcher
- 				type: 'base',					// LayerSwitcher
+				type: 'base',					// LayerSwitcher
 				visible: false,
-        		source: new ol.source.OSM({
-	  				crossOrigin:  'anonymous',
-          			url: 'https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png',
-	  				attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+				source: new ol.source.OSM({
+					crossOrigin:  'anonymous',
+					url: 'https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png',
+					attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a rel="noopener noreferrer" target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a rel="noopener noreferrer" target="_blank" href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a rel="noopener noreferrer" target="_blank" href="https://opentopomap.org">OpenTopoMap</a> (<a rel="noopener noreferrer" target="_blank" href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
 				})
 			});
 
-      		const osmLayer = new ol.layer.Tile({
+			const osmLayer = new ol.layer.Tile({
 				title: 'Open Street Map',			// LayerSwitcher
 				type: 'base',					// LayerSwitcher
 				visible: false,
-        		source: new ol.source.OSM({
+				source: new ol.source.OSM({
 					crossOrigin:  'anonymous',
 					url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-					attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+					attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a rel="noopener noreferrer" target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 				})
 			});
-      
-      		const swissTopoPixelKarteFarbe = new ol.layer.Tile({
+		
+			const swissTopoPixelKarteFarbe = new ol.layer.Tile({
 				title: 'Swiss Topo - Color Map',			// LayerSwitcher
 				type: 'base',					// LayerSwitcher
 				visible: true,
-        		source: new ol.source.XYZ({
-	  				crossOrigin:  'anonymous',
-	  				projection: 'EPSG:3857',		// Web Mercator
-          			url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg',
-	  				attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">Swisstopo</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
+				source: new ol.source.XYZ({
+					crossOrigin:  'anonymous',
+					projection: 'EPSG:3857',		// Web Mercator
+					url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg',
+					attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a rel="noopener noreferrer" target="_blank" href="https://www.swisstopo.admin.ch/">Swisstopo</a> - <a rel="noopener noreferrer" target="_blank" href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
 				})
 			});
-      
-      		const swissTopoPixelKarteGrau = new ol.layer.Tile({
+		
+			const swissTopoPixelKarteGrau = new ol.layer.Tile({
 				title: 'Swiss Topo - Grey Map',			// LayerSwitcher
 				type: 'base',					// LayerSwitcher
 				visible: false,
-        		source: new ol.source.XYZ({
+				source: new ol.source.XYZ({
 					crossOrigin:  'anonymous',
-	  				projection: 'EPSG:3857',		// Web Mercator
-          			url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg',
-	  				attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">Swisstopo</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
+					projection: 'EPSG:3857',		// Web Mercator
+					url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg',
+					attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a rel="noopener noreferrer" target="_blank" href="https://www.swisstopo.admin.ch/">Swisstopo</a> - <a rel="noopener noreferrer" target="_blank" href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
 				})
-			});      
-      
+			});
+		
 			const swissTopoSwissImage = new ol.layer.Tile({
 				title: 'Swiss Topo - Aerial imagery',			// LayerSwitcher
 				type: 'base',					// LayerSwitcher
 				visible: false,
-        		source: new ol.source.XYZ({
-	  				crossOrigin:  'anonymous',
+				source: new ol.source.XYZ({
+					crossOrigin:  'anonymous',
 					projection: 'EPSG:3857',		// Web Mercator
-          			url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg',
-	  				attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.swisstopo.admin.ch/">CNES, Spot Image, Swisstopo, NPOC</a> - <a href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
+					url: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg',
+					attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a rel="noopener noreferrer" target="_blank" href="https://www.swisstopo.admin.ch/">CNES, Spot Image, Swisstopo, NPOC</a> - <a rel="noopener noreferrer" target="_blank" href="https://www.geo.admin.ch/en/general-terms-of-use-fsdi/">Terms of use</a>',
 				})
-      		});      
+			});      
 
 			let imageExtent = [5.0, 45.0, 10.0, 49.0];
 			let sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
