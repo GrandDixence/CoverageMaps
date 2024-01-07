@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" 
-	  href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css" type="text/css"
-	  integrity="sha512-wMgv53RaFRJEYY55kgTe9rv1s3A75Ph6q8N42gB6SqupPnIQveEO00rpsC+v/g66hDZ8YRbnB/R8MySKSG6tZg=="
+	  href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css" type="text/css"
+	  integrity="sha512-VW0BZX/F8iCSJ3tnd/7IEVoHjVFabVrgtFUk1rmPoBMhJYus9cekwSiBhqFYJ5TaICYFx0ZY9sKSbrv7mOV3MA=="
 	  crossorigin="anonymous">
     </link>
     <link rel="stylesheet" 
-	  href="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.0.0/dist/ol-layerswitcher.css" type="text/css"
-	  integrity="sha512-KgbwDr2iwy3Jt2HYUcXLAx8IN7vQtgfuJLFAmnGH3KivK+jP4SCEX3foyc8GPj45xvcftcx5KuAk/5OZQ/5VOA=="
+	  href="https://cdn.jsdelivr.net/npm/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.css" type="text/css"
+	  integrity="sha512-jWH+Sv0cQTyzP+V11hZaZgoJ9TxRfyS9/apjXsmLohioXCMze5w9C+pM7KIAuLdU4hvVhHW6YB64gJ8SKbWBfA=="
 	  crossorigin="anonymous">
     </link>
     <style>
@@ -41,11 +41,11 @@
     <script type="text/javascript">
 
       const center = [7.50, 47.00];
-      const imageExtent = [6.0, 46.0, 8.0, 48.0];
+      const imageExtent = [5.0, 46.0, 9.0, 49.0];
 
-      const transformCenter = ol.proj.transform(center, 'EPSG:4326', 'EPSG:4326');			// Transform coordinates from WGS 84 to WGS 84 (projection of view)
+      const transformCenter = ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857');			// Transform coordinates from WGS 84 to Web Mercator (projection of view)
       const sourceImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of source)
-      const viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of view)
+      const viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
 
       const otmLayer = new ol.layer.Tile({
 	title: 'Open Topo Map',			// LayerSwitcher
@@ -68,7 +68,7 @@
 	  attributions: 'Powered by OpenLayers and ol-layerswitcher | Base map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 	})
       });
-     
+      
       const swissTopoPixelKarteFarbe = new ol.layer.Tile({
 	title: 'Swiss Topo - Color Map',			// LayerSwitcher
 	type: 'base',					// LayerSwitcher
@@ -97,6 +97,7 @@
 	title: 'Radio coverage map',			// LayerSwitcher
 	zIndex: 3,
 	opacity: 0.4,
+	visible: true,
 	extent: viewImageExtent, 
         source: new ol.source.ImageStatic({
           //crossOrigin: 'anonymous',
@@ -106,13 +107,13 @@
 	  attributions: ' | Data source: Radio coverage map calculated by Signal-Server - No liability'
 	})
       });
-      
+
       const map = new ol.Map({
         target: 'map',
         layers: [
 	  new ol.layer.Group({
 	    title: 'Base map',
-	    layers: [swissTopoPixelKarteFarbe, swissTopoSwissImage, otmLayer, osmLayer],
+	    layers: [swissTopoPixelKarteFarbe, swissTopoSwissImage, otmLayer, osmLayer],  
           }),
 	  new ol.layer.Group({
 	    title: 'Data',
@@ -120,7 +121,7 @@
 	  }),
         ],
         view: new ol.View({
-	  projection: 'EPSG:4326',			// WGS 84
+	  projection: 'EPSG:3857',			// Web Mercator
           center: transformCenter,
           zoom: 11
         })

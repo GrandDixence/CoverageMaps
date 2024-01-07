@@ -319,44 +319,6 @@ https://de.wikipedia.org/wiki/Kartennetzentwurf
 
 https://en.wikipedia.org/wiki/Web_Mercator_projection
 
-Bei grossflächigen Netzabdeckungskarten kann die Darstellung mit der 
-Kartenprojektion "WGS 84 Web Mercator" fehlschlagen. In dem Fall muss die
-HTML-Datei umkonfiguriert werden, damit der Webbrowser beim nächsten Versuch
-die Kartenprojektion:
-
-EPSG:4326 (WGS 84)
-
-https://en.wikipedia.org/wiki/World_Geodetic_System
-
-https://de.wikipedia.org/wiki/World_Geodetic_System_1984
-
-https://de.wikipedia.org/wiki/World_Geodetic_System
-
-verwendet. Die am Zeilenanfang mit dem Minuszeichen (-) gekennzeichneten Zeilen 
-müssen durch die mit dem Pluszeichen (+) gekennzeichneten Zeilen ersetzt werden.
-Auch hier wieder: Leerzeichen am Zeilenanfang beachten!
-
-```
-46c46
--       const transformCenter = ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857');			// Transform coordinates from WGS 84 to Web Mercator (projection of view)
----
-+       const transformCenter = ol.proj.transform(center, 'EPSG:4326', 'EPSG:4326');			// Transform coordinates from WGS 84 to WGS 84 (projection of view)
-48c48
--       const viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:3857');	// Transform image corners coordinates from WGS 84 to Web Mercator (projection of view)
----
-+       const viewImageExtent = ol.proj.transformExtent(imageExtent, 'EPSG:4326', 'EPSG:4326');	// Transform image corners coordinates from WGS 84 to WGS 84 (projection of view)
-99c99
-        view: new ol.View({
-- 	  projection: 'EPSG:3857',			// Web Mercator
----
-        view: new ol.View({
-+ 	  projection: 'EPSG:4326',			// WGS 84
-```
-
-Den Unterschied zwischen der Kartenprojektion EPSG:3857 und EPGS:4326 ist sehr
-gut anhand der Darstellung von Grönland ersichtlich, wenn am Bildschirm ganz
-Europa sichtbar ist.
-
 Zur Fehlersuche sollte im Webbrowser Firefox die Taste `<F12>` betätigt werden. 
 Danach die HTML-Datei neu laden. Interessante Angaben für die Fehlersuche
 enthält das Register "Konsole" und "Netzwerkanalyse" im Werkzeugkasten: 
