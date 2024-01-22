@@ -110,7 +110,7 @@ Signal-Server gibt die Netzabdeckungskarte  als Grafikdatei im PPM-Format
 `(*.png)` umgewandelt werden:
 
 ```
-# convert /tmp/Test_Netzabdeckung.ppm -transparent white /tmp/Test_Netzabdeckung.png
+# convert /tmp/Test_Netzabdeckung.ppm -transparent white -channel Alpha PNG32:/tmp/Test_Netzabdeckung.png
 ```
 
 Als nächster Schritt ist von Hand eine *.kmz-Datei zu erstellen.
