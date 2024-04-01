@@ -8,7 +8,10 @@ Wichtig:
 
     Achtung:
 
-    Leider ist diese Anleitung unvollständig! Fehlende Anweisungen sind an der Kennzeichnung: "TODO" ersichtlich!
+    Leider ist diese Anleitung unvollständig! 
+    
+    Fehlende Anweisungen sind an der Kennzeichnung
+    "TODO" ersichtlich!
 
 SrsRAN ermöglicht den Betrieb eines eigenen 4G/LTE-Mobilfunknetzwerks auf einem Raspberry Pi 4 mit einem LimeSDR Mini. Der Raspberry Pi 4 kann mit einer USB-Powerbank ab "Batterie" betrieben werden.
 
@@ -70,7 +73,8 @@ Leider ist die Rechenleistung vom Raspberry Pi 4 sehr limitiert. Deshalb gilt zu
     Gemäss den Angaben unter:
     https://docs.srsran.com/projects/4g/en/latest/app_notes/source/hw_packs/source/index.html?#package-1
     
-    ist das mit dem Raspberry Pi 4 betriebene, eigene 4G/LTE-Mobilfunknetzwerk auf eine Bandbreite von 5 MHz beschränkt!
+    ist das mit dem Raspberry Pi 4 betriebene, eigene 4G/LTE-Mobilfunknetzwerk
+    auf eine Bandbreite von 5 MHz beschränkt!
 
 Als Mobilfunkantennen reichen im Testbetrieb die im Lieferumfang des LimeSDR-Mini enthaltenen zwei "duck antennas". 
 
@@ -604,10 +608,12 @@ TODO:
 
     TODO:
 
-    - Kompilierung von srsRAN mit der Option "-DUSE_LTE_RATES" zur Vermeidung der srsRAN-Meldung:
+    - Kompilierung von srsRAN mit der Option "-DUSE_LTE_RATES" zur Vermeidung
+      der srsRAN-Meldung:
     
-    "Detected LimeSDR. Consider using LTE rates for better RF performance.  
-    Either compile with '-DUSE_LTE_RATES=True' or start srsENB/srsUE with '--expert.lte_sample_rates=true'"
+    "Detected LimeSDR. Consider using LTE rates for better RF performance. 
+    Either compile with '-DUSE_LTE_RATES=True' or start srsENB/srsUE with
+    '--expert.lte_sample_rates=true'"
 
 
 Wurde das für den Betrieb der Mobilfunkantenne (eNodeB; kurz eNB) des eigenen Mobilfunknetzwerks erfoderliche Programm srsENB erfolgreich kompiliert?
@@ -678,7 +684,6 @@ Kontrollieren, ob alle Konfigurationsparametern in der Beispielskonfigurationsda
 vollständig übereinstimmen.
 
 ### eNodeB konfigurieren
---------------------------------------------------------------------------------
 Konfigurationsdatei der Mobilfunkantenne (eNodeB; kurz: eNB) vom eigenen Mobilfunknetzwerk anpassen:  
 https://en.wikipedia.org/wiki/ENodeB  
 https://en.wikipedia.org/wiki/E-UTRA  
@@ -691,11 +696,16 @@ Die eNodeB-Konfigurationsdatei (enb.conf) wird vom Programm srsENB eingelesen un
 
     Achtung:	
     
-    Die hier vorgestellte eNodeB-Konfiguration behandelt keinerlei Handover-Konfigurationsparametern. Es wird davon ausgegangen, dass eine einzige Mobilfunkantenne (eNodeB) im eigenen Mobilfunknetzwerk betrieben wird!
+    Die hier vorgestellte eNodeB-Konfiguration behandelt keinerlei
+    Handover-Konfigurationsparametern. Es wird davon ausgegangen, dass eine einzige
+    Mobilfunkantenne (eNodeB) im eigenen Mobilfunknetzwerk betrieben wird!
           
-    Handover ist der Vorgang, wenn das Endgerät die Mobilfunkantenne wechselt. Eine Mobilfunkantenne versorgt den Bereich innerhalb ihrer Funkzelle mit Mobilfunk.  
+    Handover ist der Vorgang, wenn das Endgerät die Mobilfunkantenne wechselt. Eine
+    Mobilfunkantenne versorgt den Bereich innerhalb ihrer Funkzelle mit Mobilfunk.  
           
-    Alle Handover-Konfigurationsparametern werden auf den Standardwerten belassen. Beim Betrieb von mehreren Funkzellen im eigenen Mobilfunknetzwerk müssen alle Handover-Konfigurationsparametern geprüft und allenfalls angepasst werden!
+    Alle Handover-Konfigurationsparametern werden auf den Standardwerten belassen. 
+    Beim Betrieb von mehreren Funkzellen im eigenen Mobilfunknetzwerk müssen alle
+    Handover-Konfigurationsparametern geprüft und allenfalls angepasst werden!
 			
 https://de.wikipedia.org/wiki/Handover  		
 https://de.wikipedia.org/wiki/Funkzelle
@@ -724,19 +734,25 @@ Achtung:
 
     Achtung:
     
-    Zur Einhaltung der funkregulatorischen Vorgaben muss bei der Konfiguration der physikalischen Ressourcenblöcke zwingend die Angaben des zugewiesenen Mobilfunkfrequenzbands in der Funklizenz beachtet und eingehalten werden! 
+    Zur Einhaltung der funkregulatorischen Vorgaben muss bei der Konfiguration der
+    physikalischen Ressourcenblöcke zwingend die Angaben des zugewiesenen 
+    Mobilfunkfrequenzbands in der Funklizenz beachtet und eingehalten werden! 
 			
 Achtung:
 
     Achtung:
     
-    Nicht in allen Mobilfunkfrequenzbändern ist der Einsatz aller möglichen Bandbreiten zulässig. Vor der Wahl der Anzahl physikalischer Ressourcenblöcke muss die Webseite:
+    Nicht in allen Mobilfunkfrequenzbändern ist der Einsatz aller möglichen 
+    Bandbreiten zulässig. Vor der Wahl der Anzahl physikalischer Ressourcenblöcke
+    muss die Webseite:
     
     https://www.sqimway.com/lte_band.php
     
-    konsultiert werden, ob in diesem Mobilfunkfrequenzband die gewünschte Bandbreite respektive die gewünschte Anzahl physikalischer Ressourcenblöcke zulässig ist. 
+    konsultiert werden, ob in diesem Mobilfunkfrequenzband die gewünschte Bandbreite
+    respektive die gewünschte Anzahl physikalischer Ressourcenblöcke zulässig ist. 
     
-    Auf dieser Webseite findet man in der Tabelle die Spalte "Channel bandwidth (MHz)" mit der Angabe der zulässigen Bandbreite für jedes 4G/LTE-Mobilfunkfrequenzband.
+    Auf dieser Webseite findet man in der Tabelle die Spalte "Channel bandwidth (MHz)"
+    mit der Angabe der zulässigen Bandbreite für jedes 4G/LTE-Mobilfunkfrequenzband.
 
 Mit nur einer Sendeantenne (nof_ports = 1) muss der Übertragungsmodus TM1 verwendet werden. TM1 bedeutet "Single-antenna port, port 0". Siehe dazu:  
 https://www.sharetechnote.com/html/Handbook_LTE_TransmissionMode.html
@@ -792,7 +808,9 @@ Achtung:
 
     Achtung:
 
-    Zur Einhaltung der funkregulatorischen Vorgaben muss bei der Konfiguration des EARFCN zwingend die Angaben des zugewiesenen Mobilfunkfrequenzbands in der Funklizenz beachtet und eingehalten werden! 
+    Zur Einhaltung der funkregulatorischen Vorgaben muss bei der Konfiguration des 
+    EARFCN zwingend die Angaben des zugewiesenen Mobilfunkfrequenzbands in der
+    Funklizenz beachtet und eingehalten werden! 
 			
 Zum Beispiel für den Downlink im Mobilfunkfrequenzband 7 im Bereich von 2685 MHz bis 2690 MHz:
 
@@ -878,7 +896,8 @@ Warnung:
 
     Warnung:  	
     
-    Für ein sicheres, eigenes Mobilfunknetzwerk ist der Einsatz von selbst ausgestellten SIM-Karten erforderlich!
+    Für ein sicheres, eigenes Mobilfunknetzwerk ist der Einsatz
+    von selbst ausgestellten SIM-Karten erforderlich!
 
 			 
 Zum Thema "Sicherheit" im 4G/LTE-Mobilfunknetzwerk sollten diese Webseiten
@@ -916,7 +935,6 @@ Alle Änderungen in den EPC-Konfigurationsdateien kontrollieren:
     # diff --color=always user_db.csv.example user_db.csv
 
 ### Testlauf
---------------------------------------------------------------------------------
 Die Spannung steigt, es steht der erste Testlauf mit der neuen Konfiguraton an. Für ein funktionstüchtiges, eigenes Mobilfunknetzwerk muss gleichzeitig das Kernnetzwerk (EPC) und die Mobilfunkantenne (eNodeB) in Betrieb stehen.
 
 Kernnetzwerk (EPC) starten:
@@ -941,7 +959,8 @@ Achtung:
 
     Achtung:
     
-    Aus Sicherheitsgründen sollte das Programm srsenb immer ohne Root-Rechte gestartet werden!
+    Aus Sicherheitsgründen sollte das Programm srsenb immer ohne Root-Rechte
+    gestartet werden!
 			
 Direkt nach dem Start von srsenb diese Anwendung zur Echtzeitanwendung heraufzustufen. Dazu sind root-Rechte erforderlich!
   
@@ -1028,15 +1047,20 @@ TODO:
 
     TODO:
     
-    - Erstellen eines Softwarepakets (DEB) von srsRAN_4G für die professionelle Softwareinstallation.
+    - Erstellen eines Softwarepakets (DEB) von srsRAN_4G für die professionelle
+      Softwareinstallation.
 
-    - Behandlung der srsRAN-Installation mit den Befehlen: "make install" und "ldconfig"?
+    - Behandlung der srsRAN-Installation mit den Befehlen: "make install" und
+      "ldconfig"?
     
-    - Erstellen von Systemd-Units zum Starten und Beenden der Serverdienste srsENB und srsEPC.
+    - Erstellen von Systemd-Units zum Starten und Beenden der Serverdienste srsENB
+      und srsEPC.
     
-    - Konfiguration der Systemd-Units für den Start von srsENB als Echtzeitanwendung (höhere Priorität im Task-Scheduling).
+    - Konfiguration der Systemd-Units für den Start von srsENB als 
+      Echtzeitanwendung (höhere Priorität im Task-Scheduling).
     
-    - Konfiguration der Systemd-Units mit einem "Systemd-Watchdog" für den zuverlässigen, kontinuerlichen Betrieb der Serverdienste srsENB und srsEPC.
+    - Konfiguration der Systemd-Units mit einem "Systemd-Watchdog" für den 
+      zuverlässigen, kontinuerlichen Betrieb der Serverdienste srsENB und srsEPC.
     
     - Überwachung der CPU-Auslastung mit "htop".
     
@@ -1044,11 +1068,14 @@ TODO:
     
     - Quellcode-Änderungen für den Netzwerkzugriff mit fremden SIM-Karten.
     
-    - IP-Routerkonfiguration für die Weiterleitung der Datenpakete aus dem eigenen Mobilfunknetzwerk ins Internet.
+    - IP-Routerkonfiguration für die Weiterleitung der Datenpakete aus dem 
+      eigenen Mobilfunknetzwerk ins Internet.
     
-    - Firewallregeln für die Weiterleitung der Datenpakete aus dem eigenen Mobilfunknetzwerk ins Internet.
+    - Firewallregeln für die Weiterleitung der Datenpakete aus dem eigenen 
+      Mobilfunknetzwerk ins Internet.
     
-    - "Traffic Shaper" für die Weiterleitung der Datenpakete aus dem eigenen Mobilfunknetzwerk ins Internet.
+    - "Traffic Shaper" für die Weiterleitung der Datenpakete aus dem eigenen
+      Mobilfunknetzwerk ins Internet.
     
     - Beschreib der Netzwerkanmeldung mit einem modernen, Android-Smartphone.
 
