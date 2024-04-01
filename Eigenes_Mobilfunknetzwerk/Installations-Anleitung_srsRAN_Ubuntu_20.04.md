@@ -87,6 +87,11 @@ erhältlich.
 ## Langzeitbetrieb
 Soll die SDR-Hardware im Langzeitbetrieb eingesetzt werden, müssen weitere Hardwarevoraussetzungen erfüllt werden. Unter Langzeitbetrieb wird der unterbruchsfreie Einsatz über eine Zeitdauer von mehreren Tagen (24h/7 Tage-Betrieb) verstanden.
 
+Die SDR-Hardware ist mit einer gut funktionierenden Kühlung auszustatten. Entweder wird aktiv gekühlt mit einem Lüfter. Oder es kommt eine rein passive Kühlung zum Einsatz. Bei Lüftern geht früher oder später das Kugellager kaputt, oder die Lüftungsschlitzen verstopfen, deshalb ist eine rein passive Kühlung langlebiger, zuverlässiger und schont die Ohren. 
+
+Eine ordentliche, rein passive Kühlung von SDR-Hardware verfügt über ein Alugehäuse, welches über ein Wärmeleitpad die Wärme von den heisslaufenden Chips abtransportiert. Bei rein passiver Kühlung wird durch Konvektion die kalte Luft von unten angesogen, am Gehäuse erwärmt und steigt als warme Luft nach oben.  
+https://de.wikipedia.org/wiki/W%C3%A4rmeleitpad
+
 USB-Verbindungen sind nicht für den Langzeitbetrieb geeignet. Deshalb sollte zwischen der Rechnerhardware (z.B. Raspberry Pi) und der SDR-Hardware eine langzeitstabile Kommunikationsverbindung realisiert werden. 
 
 Spezialrechnerhardware bieten Bussysteme an, über welche die Kommunikation zwischen SDR und Rechner langzeitstabil abgewickelt werden kann. Soll kein Spezialrechner eingesetzt werden, muss mit Gigabit-Ethernet-Netzwerkkabel eine langzeitstabile Netzwerkverbindung zwischen SDR und Rechner realisiert werden.
@@ -94,8 +99,8 @@ Spezialrechnerhardware bieten Bussysteme an, über welche die Kommunikation zwis
 Der Einsatz eines Ethernet-Netzwerkkabels hat den Vorteil, dass für die Rechnerhardware kostengünstige COTS-Hardware eingesetzt werden kann. Und die Rechnerhardware relativ leicht durch eine neuere, leistungsfähigere Rechnerhardware ersetzt werden kann.
 
 Für den Betrieb an einem SDR geeignete Spezialrechnerhardware ist vom Hersteller Ettus als USRP E313 erhältlich:  
-https://www.ettus.com/product-categories/usrp-embedded-series/  
-https://www.ettus.com/wp-content/uploads/2019/01/USRP_E313_Datasheet-1.pdf
+- https://www.ettus.com/product-categories/usrp-embedded-series/  
+- https://www.ettus.com/wp-content/uploads/2019/01/USRP_E313_Datasheet-1.pdf
 
 ## Anforderungen an die Frequenz- und Phasensynchronisation der SDR-Hardware
 Mobilfunknetzwerke stellen hohe Anforderungen an die Frequenz- und Phasensynchronisation des im Downlink ausgestrahlten Funksignals. Üblich sind zeitliche Genauigkeiten unter 10 μs. 
@@ -108,15 +113,15 @@ Hochwertige SDR-Hardware verfügt über einen Anschluss zum Einspeisen eines ext
 
 Leider ist der LimeSDR-Mini kein hochwertiger SDR. Der LimeSDR-Mini verfügt zwar über einen mit einer mechanisch ungenügend robusten U.FL-Steckverbindung 
 ausgerüsteten "EXT CLOCK"-Anschluss auf der Leiterplatte. Aber zur Nutzung von diesem "EXT CLOCK"-Anschluss müssen auf der Leiterplatte vom LimeSDR-Mini einige Nullohmwiderstände umgelöstet werden!  
-https://wiki.myriadrf.org/LimeSDR-Mini_v1.1_hardware_description  
-https://discourse.myriadrf.org/t/enabling-external-clock-on-limesdr-mini-1-2/3066
+- https://wiki.myriadrf.org/LimeSDR-Mini_v1.1_hardware_description  
+- https://discourse.myriadrf.org/t/enabling-external-clock-on-limesdr-mini-1-2/3066
 
 Auch der ADALM-PLUTO (PlutoSDR) ist kein hochwertiger SDR. Neuere Varianten vom PlutoSDR verfügen über einen "EXT CLOCK"-Anschluss über eine mechanisch 
 ungenügend robuste U.FL-Steckverbindung. Jedoch ist diese U.FL-Steckerverbindung nur innerhalb des PlutoSDR-Gehäuse erreichbar. Deshalb muss das Gehäuse vom 
 PlutoSDR geöffnet oder modifiziert werden, damit ein externes Taktsignal in den PlutoSDR eingespiesen werden kann.  
-https://wiki.amsat-dl.org/doku.php?id=de:tricks:pluto_extclk&do=export_pdf  
-https://wiki.amsat-dl.org/doku.php?id=en:tricks:pluto_extclk&do=export_pdf  
-https://www.youtube.com/watch?v=o2IeXpsOQig
+- https://wiki.amsat-dl.org/doku.php?id=de:tricks:pluto_extclk&do=export_pdf  
+- https://wiki.amsat-dl.org/doku.php?id=en:tricks:pluto_extclk&do=export_pdf  
+- https://www.youtube.com/watch?v=o2IeXpsOQig
 
 Die Synchronisation des SDR erfolgt in der Regel über einen GPSDO. Die im Aussenbereich montierte GNSS-Empfangsantenne leitet das vom GNSS-Satelliten empfangene, hochgenaue Atomuhr-Zeitsignal über ein langes Antennenkabel zum im Innenbereich montierten GPSDO.
 
@@ -125,6 +130,9 @@ Der GPSDO wandelt das GPS-Signal in ein SDR-kompatibles Taktsignal um. Einige SD
 In der Regel wird im GPSDO mit dem Zeitsignal vom GNSS-Satelliten ein lokaler Quarzoszillator synchronisiert. Dieses Synchronisationsverfahren wird GPSDO genannt. Beim Ausfall des GNSS-Zeitsignals läuft dieser Quarzoszillator frei und ist alleinig für die Frequenz- und Phasensynchronisation des Funksenders zuständig.
 
 Ob der Quarzoszillator als temperaturstabilisierter Quarzoszillator (TCXO), mit einem Quarzofen (OCXO) oder als Rubidium-Oszillator realisiert wird, hängt von den Anforderungen ab, wie lange das Mobilfunknetzwerk ohne externe Synchronisation betrieben werden soll. Rubidium-Oszillatoren sind langfristig stabiler und genauer als Quarzoszillatoren.
+
+Eine nette Übersicht über die Genauigkeit der verschiedenen Bauarten von lokalen Quarzoszillatoren bietet der Hersteller Meinberg in diesem PDF:    
+https://www.meinberg.de/download/docs/other/oscillator-options-de.pdf
 
 Der Hersteller Leo Bodnar bietet einige SDR-kompatible GPSDO an:  
 https://www.leobodnar.com/shop/index.php?main_page=index&cPath=107
@@ -138,8 +146,8 @@ Auch für andere SDR-Hardware ist dieses Youtube-Video informativ. In diesem Vid
 
 ## Funklizenz und funkregulatorische Anforderungen
 Zum Betrieb eines eigenen Mobilfunknetzwerk ist eine entsprechende Funklizenz von der nationalen Funkaufsichtbehörde erforderlich. In der Schweiz ist dafür das BAKOM zuständig. Das BAKOM gestattet gegen eine ordentliche jährliche Gebühr die Nutzung des Mobilfunkfrequenzband 78 (3.5 GHz) für private Campus-Netze.  
-https://www.bakom.admin.ch/bakom/de/home/das-bakom/medieninformationen/bakom-infomailing/infomailing-61/realisierung-privater-lokaler-mobilfunknetze-in-der-schweiz-ab-1-januar-2024-moglich.html  
-https://www.bakom.admin.ch/bakom/de/home/frequenzen-antennen/frequenznutzung-mit-oder-ohne-konzessionen/privatelokalemobilfunknetze.html
+- https://www.bakom.admin.ch/bakom/de/home/das-bakom/medieninformationen/bakom-infomailing/infomailing-61/realisierung-privater-lokaler-mobilfunknetze-in-der-schweiz-ab-1-januar-2024-moglich.html  
+- https://www.bakom.admin.ch/bakom/de/home/frequenzen-antennen/frequenznutzung-mit-oder-ohne-konzessionen/privatelokalemobilfunknetze.html
 
 Eine Übersicht über alle in der Schweiz für Mobilfunknetzwerke nutzbaren Mobilfunkfrequenzbändern bietet die Webseite:  
 https://de.wikipedia.org/wiki/Mobilfunkfrequenzen_in_der_Schweiz
@@ -171,8 +179,8 @@ https://de.wikipedia.org/wiki/Diplexer
 Mit SDR-Hardware sind eigene Mobilfunknetzwerke mit Frequenzduplex (FDD) deutlich einfacher zu realisieren als mit Zeitduplex (TDD). Deshalb sollte mit SDR-Hardware nur Campus-Netze in FDD-Mobilfunkfrequenzbändern betrieben werden.
 
 Hier eine Übersicht über alle 4G/LTE-Mobilfunkfrequenzbändern weltweit:  
-https://en.wikipedia.org/wiki/LTE_frequency_bands  
-https://www.sqimway.com/lte_band.php
+- https://en.wikipedia.org/wiki/LTE_frequency_bands  
+- https://www.sqimway.com/lte_band.php
 
 Hinweis:  Im englischen Sprachraum ist keine Unterscheidung zwischen Diplexer und Duplexer üblich. Beide werden schlicht: "Duplexer" genannt.
 
@@ -364,8 +372,8 @@ Linux-Kernel einfrieren lassen  => **!!! Vorgängig alle Daten sichern !!!**
     => Rechner wird nach 30 Sekunden automatisch neu gestartet.
 
 Die Firewallkonfiguration ist so anzupassen, dass auf der Loopback-Netzwerkschnittstelle Netzwerkverbindungen mit dem Netzwerkprotokoll SCTP gestattet sind.  
-https://de.wikipedia.org/wiki/Stream_Control_Transmission_Protocol  
-https://www.ionos.de/digitalguide/server/knowhow/sctp-stream-control-transmission-protocol/
+- https://de.wikipedia.org/wiki/Stream_Control_Transmission_Protocol  
+- https://www.ionos.de/digitalguide/server/knowhow/sctp-stream-control-transmission-protocol/
 
 Die Konfiguration der Linux-Firewall im Allgemeinen wurde unter:  
 https://www.lancom-forum.de/fragen-zum-thema-firewall-f15/bandbreite-zum-surfen-zur-ausenstelle-begrenzen-t17321.html#p106507  
@@ -447,13 +455,13 @@ SoapySDR installieren:
     $ apt install libsoapysdr-dev
 
 
-## Installation von LimeSuite
-Die LimeSuite ist eine Softwaresammlung für die Ansteuerung des LimeSDR Mini. LimeSuite ermöglicht das Einspielen von Firmware-Updates in den LimeSDR Mini.  
+## Installation von Lime Suite
+Die Lime Suite ist eine Softwaresammlung für die Ansteuerung des LimeSDR Mini. Lime Suite ermöglicht das Einspielen von Firmware-Updates in den LimeSDR Mini.  
 https://wiki.myriadrf.org/Lime_Suite
 
-Bei der vorgängigen Installation vom Softwarepaket soapysdr-module-lms7 wurden als Abhängigkeiten bereits Softwarepakete mit Bestandteilen der LimeSuite installiert.
+Bei der vorgängigen Installation vom Softwarepaket soapysdr-module-lms7 wurden als Abhängigkeiten bereits Softwarepakete mit Bestandteilen der Lime Suite installiert.
 
-Komplette LimeSuite installieren:
+Komplette Lime Suite installieren:
 
     $ apt install limesuite
 
@@ -462,7 +470,7 @@ udev-Regel für den LimeSDR Mini installieren:
     $ apt install limesuite-udev
     $ reboot
 
-Installation der LimeSuite kontrollieren:
+Installation der Lime Suite kontrollieren:
 
     # LimeUtil --info
     Supported connections:
@@ -596,25 +604,20 @@ Achtung: Weitere Schritte ohne root-Rechte!
     # git checkout tags/release_23_11
     # mkdir build 
     # cd build/
-    # cmake ../
+    # cmake -DUSE_LTE_RATES=ON ../
     # make -j$(nproc)
     => Einige Stunden warten! Der Kompiliervorgang dauert mehrere Stunden!
 
-Wenn der Kompiliervorgang abstürzt, einfach den Kompiliervorgang erneut starten. Für den Raspberry Pi 4 wird unter Ubuntu 20.04 nicht der offizielle Linux-Kernel verwendet.
-Dies führt dank dem "tainted" Linux-Kernel zu Stabilitätsproblemen.  
+Wenn der Kompiliervorgang abstürzt, einfach den Kompiliervorgang erneut starten. Für den Raspberry Pi 4 wird unter Ubuntu 20.04 nicht der offizielle Linux-Kernel verwendet. Dies führt dank dem "tainted" Linux-Kernel zu Stabilitätsproblemen.  
 https://www.kernel.org/doc/html/latest/admin-guide/tainted-kernels.html
 
-TODO:
+Bei fehlender CMake-Option "-DUSE_LTE_RATES:=ON" würde das Programm srsENB beim Programmstart folgende Fehlermeldung ausgeben:
 
-    TODO:
-
-    - Kompilierung von srsRAN mit der Option "-DUSE_LTE_RATES" zur Vermeidung
-      der srsRAN-Meldung:
-    
     "Detected LimeSDR. Consider using LTE rates for better RF performance. 
     Either compile with '-DUSE_LTE_RATES=True' or start srsENB/srsUE with
     '--expert.lte_sample_rates=true'"
 
+Leider funktioniert der Startparameter "--expert.lte_sample_rates=true" nicht. Deshalb ist beim Einsatz von LimeSDR (Mini) zwingend diese CMake-Option für den Kompiliervorgang erforderlich.
 
 Wurde das für den Betrieb der Mobilfunkantenne (eNodeB; kurz eNB) des eigenen Mobilfunknetzwerks erfoderliche Programm srsENB erfolgreich kompiliert?
 
@@ -684,14 +687,16 @@ Kontrollieren, ob alle Konfigurationsparametern in der Beispielskonfigurationsda
 vollständig übereinstimmen.
 
 ### eNodeB konfigurieren
-Konfigurationsdatei der Mobilfunkantenne (eNodeB; kurz: eNB) vom eigenen Mobilfunknetzwerk anpassen:  
-https://en.wikipedia.org/wiki/ENodeB  
-https://en.wikipedia.org/wiki/E-UTRA  
-https://docs.srsran.com/projects/4g/en/latest/usermanuals/source/srsenb/source/1_enb_intro.html#enodeb-architecture
+Konfigurationsdateien der Mobilfunkantenne (eNodeB; kurz: eNB) vom eigenen Mobilfunknetzwerk anpassen:  
+- https://en.wikipedia.org/wiki/ENodeB  
+- https://en.wikipedia.org/wiki/E-UTRA  
+- https://docs.srsran.com/projects/4g/en/latest/usermanuals/source/srsenb/source/1_enb_intro.html#enodeb-architecture
+
+Zuerst die Hauptkonfigurationsdatei:
 
     # cd ~/srsRAN_4G/config/
     # nano enb.conf
-
+    
 Die eNodeB-Konfigurationsdatei (enb.conf) wird vom Programm srsENB eingelesen und verarbeitet. 
 
     Achtung:	
@@ -707,8 +712,8 @@ Die eNodeB-Konfigurationsdatei (enb.conf) wird vom Programm srsENB eingelesen un
     Beim Betrieb von mehreren Funkzellen im eigenen Mobilfunknetzwerk müssen alle
     Handover-Konfigurationsparametern geprüft und allenfalls angepasst werden!
 			
-https://de.wikipedia.org/wiki/Handover  		
-https://de.wikipedia.org/wiki/Funkzelle
+- https://de.wikipedia.org/wiki/Handover  		
+- https://de.wikipedia.org/wiki/Funkzelle
 
 Alle nachfolgend nicht genannten Blöcke und Konfigurationsparametern der eNodeB-Konfigurationsdatei (enb.conf) sind auf den Standardwerten zu belassen!
 
@@ -762,8 +767,8 @@ https://www.sharetechnote.com/html/Handbook_LTE_TransmissionMode.html
     nof_ports = 1
 
 Beim Einsatz von mehreren Sendeantennen oder mehrern Empfangsantennen kann der Übertragungsmodus (transmission mode) angepasst werden. Damit der Mobilfunkempfang von den Vorteilen der Antennendiversität profitiert.  
-https://de.wikipedia.org/wiki/Antennendiversit%C3%A4t  
-https://docs.srsran.com/projects/4g/en/latest/usermanuals/source/srsenb/source/4_enb_advanced.html#mimo
+- https://de.wikipedia.org/wiki/Antennendiversit%C3%A4t  
+- https://docs.srsran.com/projects/4g/en/latest/usermanuals/source/srsenb/source/4_enb_advanced.html#mimo
 
 Die IP-Adressangaben belassen wir generell auf den Standardwerten. Aus Sicherheitsgründen wird nur das rechnerinterne Loopback-Netzwerk verwendet.  
 https://de.wikipedia.org/wiki/Loopback
@@ -831,9 +836,11 @@ Alle Änderungen in der eNodeB-Konfigurationsdateien kontrollieren:
 
 
 ### EPC konfigurieren
-Konfigurationsdatei des Kernnetzwerks (Evolved Packet Core; kurz: EPC) vom eigenen Mobilfunknetzwerk anpassen:  
-https://en.wikipedia.org/wiki/Evolved_Packet_Core  
-https://docs.srsran.com/projects/4g/en/latest/usermanuals/source/srsepc/source/1_epc_intro.html
+Konfigurationsdateien des Kernnetzwerks (Evolved Packet Core; kurz: EPC) vom eigenen Mobilfunknetzwerk anpassen:  
+- https://en.wikipedia.org/wiki/Evolved_Packet_Core  
+- https://docs.srsran.com/projects/4g/en/latest/usermanuals/source/srsepc/source/1_epc_intro.html
+
+Zuerst die Hauptkonfigurationsdatei:
 
     # cd ~/srsRAN_4G/config/
     # nano epc.conf
@@ -902,13 +909,13 @@ Warnung:
 			 
 Zum Thema "Sicherheit" im 4G/LTE-Mobilfunknetzwerk sollten diese Webseiten
 konsultiert werden:  
-https://www.ericsson.com/en/blog/2021/6/evolution-of-cryptographic-algorithms  
-https://www.3glteinfo.com/lte-security-architecture/  
-https://www.sharetechnote.com/html/Handbook_LTE_EEA.html  
-https://www.sharetechnote.com/html/Handbook_LTE_EIA.html   
-https://www.etsi.org/security-algorithms-and-codes/security-algorithms  
-https://www.telecomtrainer.com/what-is-the-function-of-the-security-mode-command-smc-in-lte-communication/  
-https://howltestuffworks.blogspot.com/2011/11/nas-security-mode-complete.html
+- https://www.ericsson.com/en/blog/2021/6/evolution-of-cryptographic-algorithms  
+- https://www.3glteinfo.com/lte-security-architecture/  
+- https://www.sharetechnote.com/html/Handbook_LTE_EEA.html  
+- https://www.sharetechnote.com/html/Handbook_LTE_EIA.html   
+- https://www.etsi.org/security-algorithms-and-codes/security-algorithms  
+- https://www.telecomtrainer.com/what-is-the-function-of-the-security-mode-command-smc-in-lte-communication/  
+- https://howltestuffworks.blogspot.com/2011/11/nas-security-mode-complete.html
 
 Weiter geht es mit den Umkonfigurationen im [log]-Block:
 
@@ -1020,18 +1027,22 @@ Für Mobilfunkfrequenzbänder im Bereich von 10 MHz bis 2 GHz muss der:
 
 verwendet werden.
 
-https://wiki.myriadrf.org/LimeSDR-Mini_v1.2_hardware_description#RF_Frequency_Range  
-https://github.com/srsran/srsRAN_4G/issues/437#issuecomment-586745598
+- https://wiki.myriadrf.org/LimeSDR-Mini_v1.2_hardware_description#RF_Frequency_Range  
+- https://github.com/srsran/srsRAN_4G/issues/437#issuecomment-586745598
 
 Häufig schlägt die Kalibration des Empfangspfad vom LimeSDR Mini mit der 
 Fehlermeldung:
 
     [ERROR] Rx calibration: MCU error 5 (Loopback signal weak: not connected/insufficient gain?)
 
-in den Ausgaben vom Programm srsENB fehl. Offenbar schlägt die Kalibration des LimeSDR (Mini) fehl, wenn die Kühlung der SDR-Hardware ungenügend ist oder die Synchronisation mit einer Atomuhr fehlt (GPSDO).    
-https://discourse.myriadrf.org/t/error-rx-calibration-mcu-error-5-loopback-signal-weak-not-connected-insufficient-gain/7637
+in den Ausgaben vom Programm srsENB fehl. Die Kalibration des LimeSDR (Mini) schlägt häufig fehl, wenn der hochfrequente Empfangspfad (RX1_H, LNAH) kalibriert werden soll. 
 
-Die Kalibration des LimeSDR (Mini) schlägt häufig fehl, wenn der hochfrequente Empfangspfad (RX1_H, LNAH) kalibriert werden soll. 
+Gemäss dem Beitrag von Andrew Back am 11.11.2020 um 14:58 Uhr unter:    
+https://discourse.myriadrf.org/t/srslte-and-limesdr-mini/6688/5  
+ist die Ursache der fehlgeschlagenen Kalibrierung ein Programmierfehler in älteren Versionen der Lime Suite. 
+
+Ab Version 20.10 der Lime Suite ist ein fehlerkorrigierter Kalibrieralgorithmus mit der CMake-Option "-DENABLE_NEW_GAIN_BEHAVIOUR=ON" erhältlich. Man beachte den ersten Hinweis (Notes 1.) in diesem Beitrag zur Veröffentlichung der Version 20.10 der Lime Suite:  
+https://discourse.myriadrf.org/t/new-lime-suite-20-10-release/6660
 
 Die Kalibration des Sendepfads und Empfangspfad wird bei jedem Programmstart von srsENB automatisch durchgeführt. Ein SDR sollte nie ohne vorgängige, erfolgreiche Kalibration im Sendepfad und Empfangspfad für den Funksendebetrieb eingesetzt werden!
 
@@ -1047,6 +1058,16 @@ TODO:
 
     TODO:
     
+    - Update dieser Installationsanleitung auf die kommende, neue LTS-Version 
+      von Ubuntu (v24.04). Dabei Bereinigung der Softwarepaketabhängigkeiten
+      mit den CMake-Optionen:
+
+      -DENABLE_SRSUE=OFF
+      -DENABLE_GUI=OFF
+      -DENABLE_HARDSIM=OFF
+
+      von srsRAN.
+
     - Erstellen eines Softwarepakets (DEB) von srsRAN_4G für die professionelle
       Softwareinstallation.
 
