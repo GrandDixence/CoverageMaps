@@ -1,4 +1,4 @@
-**Installations-Anleitung srsRAN - Ubuntu Server 20.04**
+**Installationsanleitung srsRAN - Ubuntu Server 20.04**
 ---
 
 # Einleitung
@@ -43,7 +43,9 @@ https://docs.srsran.com/projects/4g/en/latest/app_notes/source/pi4/source/index.
 - cyberlogint - Build a LTE Network with srsLTE and Program Your Own USIM Card  
 https://cyberloginit.com/2018/05/03/build-a-lte-network-with-srslte-and-program-your-own-usim-card.html
 
-# Hardwarevoraussetzungen
+# Hardware
+
+## Anforderungen an den SDR
 Für den Betrieb eines 4G/LTE-Mobilfunknetzwerks mit einem SDR muss die eingesetzte SDR-Hardware das gleichzeitige Senden und Empfangen von Funksignalen (Full Duplex) unterstützten. Weiter muss die SDR-Hardware den Funkbetrieb mit Zeitstempeln (timestamping) unterstützen. 
 
 Aktuell die billigste SDR-Hardware welche den Funkbetrieb mit "Full Duplex" und "Timestamping" unterstützt, ist der LimeSDR Mini. 
@@ -51,6 +53,7 @@ Aktuell die billigste SDR-Hardware welche den Funkbetrieb mit "Full Duplex" und 
 In naher Zukunft könnte der ADALM-PLUTO (PlutoSDR) den LimeSDR Mini als die billigste SDR-Hardware mit "Full Duplex"- und Timestamping-Unterstützung ablösen. Aktuell fehlt aber dem PlutoSDR noch die Timestamping-Unterstützung im offiziellen Quellcode der Software (SoapySDR)! Siehe dazu:  
 https://www.quantulum.co.uk/blog/private-lte-with-analog-adalm-pluto/
 
+## Anforderungen an den Rechner
 Je mehr Rechenleistung der eingesetzte Rechner aufweist, desto mehr Bandbreite kann der SDR für den Betrieb des eigenen 4G/LTE-Mobilfunknetzwerks einsetzen.
 
 Die maximal erreichbare Datenübertragungsrate mit der konfigurierten Bandbreite des Mobilfunksignals kann mit der Webseite:
@@ -76,6 +79,13 @@ Leider ist die Rechenleistung vom Raspberry Pi 4 sehr limitiert. Deshalb gilt zu
     ist das mit dem Raspberry Pi 4 betriebene, eigene 4G/LTE-Mobilfunknetzwerk
     auf eine Bandbreite von 5 MHz beschränkt!
 
+Auch die Anforderungen an die Speichergrösse (RAM) sind zu beachten:
+
+    Achtung:
+
+    Der Rechner muss über mindestens 4 GB RAM verfügen!
+
+## Anforderungen an die Mobilfunkantenne(n)
 Als Mobilfunkantennen reichen im Testbetrieb die im Lieferumfang des LimeSDR-Mini enthaltenen zwei "duck antennas". 
 
 Beim gleichzeitigen Betrieb von zweien Mobilfunkantennen, ist darauf zu achten, dass die Ausrichtung der Sendeantenne in einem Winkel von 90° verschoben zur Ausrichtung der Empfangsantenne erfolgt. Damit wird eine Kreuzpolarisation erzeugt, welche die Störeinflüsse der Sendeantenne auf die Empfangsantenne minimiert.
@@ -176,7 +186,7 @@ https://de.wikipedia.org/wiki/Duplexer
 Wenn Frequenzduplex (FDD) eingesetzt wird, erfolgt die Trennung von Sende- und Empfangspfad mit einem Diplexer. Beim Einsatz eines Diplexer wird der aus funkregulatorischen Anforderungen erforderliche Bandpass üblicherweise im Diplexer realisiert.  
 https://de.wikipedia.org/wiki/Diplexer
 
-Mit SDR-Hardware sind eigene Mobilfunknetzwerke mit Frequenzduplex (FDD) deutlich einfacher zu realisieren als mit Zeitduplex (TDD). Deshalb sollte mit SDR-Hardware nur Campus-Netze in FDD-Mobilfunkfrequenzbändern betrieben werden.
+Mit SDR-Hardware sind eigene Mobilfunknetzwerke mit Frequenzduplex (FDD) deutlich einfacher zu realisieren als mit Zeitduplex (TDD). Deshalb sollte mit SDR-Hardware nur Campus-Netze in FDD-Mobilfunkfrequenzbändern betrieben werden.  
 
 Hier eine Übersicht über alle 4G/LTE-Mobilfunkfrequenzbändern weltweit:  
 - https://en.wikipedia.org/wiki/LTE_frequency_bands  
@@ -187,13 +197,17 @@ Hinweis:  Im englischen Sprachraum ist keine Unterscheidung zwischen Diplexer un
 Diplexer sind zum Beispiel beim deutschen Hersteller Sysmocom erhältlich.  
 https://shop.sysmocom.de/RF/Duplexers/
 
+Einige leicht verständliche Fotos und Abbildungen zum Einsatz eines Diplexers bietet:    
+https://librecellular.org/user/hardware
+
 Diplexer werden üblicherweise "massgeschneidert" für jede Mobilfunkantenne gefertigt. Damit der Hersteller den für diese Mobilfunkantenne bestellten 
 Diplexer auf diese Mobilfunkantenne massgeschneidert liefern kann, muss der Besteller bei der Diplexer-Bestellung die beiden gewünschten Grenzfrequenzen 
 angeben. Der Besteller entnimmt die Angaben der beiden Grenzfrequenzen seiner Funklizenz.  
 https://de.wikipedia.org/wiki/Grenzfrequenz
 
+# Software 
 
-# Hinweise zur IT-Security
+##  Hinweise zur IT-Security
     Sicherheitswarnung:
      
     Für die zu installierenden Softwarepakete:
@@ -239,7 +253,7 @@ Für diese Software muss regelmässig (1x pro Woche) auf der Webseite:
 https://github.com/srsran/srsRAN_4G/security  
 kontrolliert werden, ob diese Software bekannte Sicherheitslücken enthält. Wenn ja, muss die von der Sicherheitslücke betroffene Software aus Sicherheitsgründen ausser Betrieb genommen werden oder aktualisiert werden!
 
-# Umkonfiguraton des Betriebssystems
+## Umkonfiguraton des Betriebssystems
 Hinweise, Tricks und Tipps zum Einsatz eines Raspberry Pi 4 bieten die Beiträge unter:  
 https://www.lancom-forum.de/fragen-zur-lancom-systems-routern-und-gateways-f41/vdsl-umzug-glasfaser-neuer-router-t17926.html#p101750
 
@@ -346,11 +360,12 @@ Hardware-Watchdog testen:
 
 Als Software-Watchdog sollte Systemd verwendet werden. Dazu muss Systemd in der Konfigurationsdatei /etc/systemd/system.conf umkonfiguriert werden:
 
-  $ nano /etc/systemd/system.conf
-  RuntimeWatchdogSec=30
-  RebootWatchdogSec=10min
-  ShutdownWatchdogSec=10min
-  KExecWatchdogSec=30
+    $ nano /etc/systemd/system.conf
+
+    RuntimeWatchdogSec=30
+    RebootWatchdogSec=10min
+    ShutdownWatchdogSec=10min
+    KExecWatchdogSec=30
 
 Informationen zu den einzelnen Konfigurationsparametern liefert die entsprechende Man-Page:
 
@@ -406,6 +421,9 @@ Achtung:
 
     Achtung:  Die neuen Firewallregeln für SCTP gehen bei jedem Rechnerneustart verloren!
 
+Damit die SCTP-Firewallregeln den Rechnerstart überleben, muss ein Verfahren zum Speichern und Laden der Firewallregeln in/aus einer Konfigurationsdatei verwendet werden. Siehe dazu:  
+https://www.lancom-forum.de/fragen-zum-thema-firewall-f15/bandbreite-zum-surfen-zur-ausenstelle-begrenzen-t17321.html#p106507
+
 Aktuelle Filtertabellen der Linux-Firewall abfragen:
 
     $ iptables -L -n -v -t filter
@@ -433,14 +451,17 @@ Aktuelle Filtertabellen der Linux-Firewall abfragen:
     $ systemctl disable multipathd.service
     $ systemctl mask multipathd.service
 
-TODO:
+Das durch Systemd geführte Logbuch in der Konfigurationsdatei /etc/systemd/journald.conf korrekt konfigurieren:
 
-    TODO:
+    $ nano /etc/systemd/journald.conf
 
-    - Vermeidung der mlockall-Fehlermeldung beim Start von srsENB. Siehe dazu:
-    https://github.com/srsran/srsRAN_4G/issues/881#issuecomment-1247971384
+    [Journal]
+    Storage=persistent
+    SystemMaxUse=300M
 
-# Softwareinstallation und Konfiguration
+Hilfestellung bietet die man-Page:
+
+    # man journald.conf
 
 ## Installation von SoapySDR
 SoapySDR ermöglicht Programmen die herstellerunabhängige Ansteuerung der SDR-Hardware.  
@@ -652,37 +673,98 @@ Die Beispiele der Konfigurationsdateien suchen:
     # find ~/srsRAN -type f |grep -i conf.example
     # find ~/srsRAN -type f |grep -i csv.example
 
-Die Beispiele der Konfigurationsdatei kopieren:
+Neues Verzeichnis für die Konfigurationsdateien erstellen, die Zugriffsrechte anpassen und kontrollieren:
 
-    # mkdir ~/srsRAN_4G/config
+    $ mkdir /etc/srsRAN
 
-    # cp ~/srsRAN_4G/srsenb/enb.conf.example ~/srsRAN_4G/config/
-    # cp ~/srsRAN_4G/srsenb/sib.conf.example ~/srsRAN_4G/config/
-    # cp ~/srsRAN_4G/srsenb/rr.conf.example ~/srsRAN_4G/config/
-    # cp ~/srsRAN_4G/srsenb/rb.conf.example ~/srsRAN_4G/config/
+    $ chmod u=rwX,g=rX,o=rX /etc/srsRAN
 
-    # cp ~/srsRAN_4G/srsepc/epc.conf.example ~/srsRAN_4G/config/
-    # cp ~/srsRAN_4G/srsepc/user_db.csv.example ~/srsRAN_4G/config/
+    $ ls -alh /etc/srsRAN/
+    drwxr-xr-x ... root root ... .
+    ...
 
-    # cd ~/srsRAN_4G/config/
+Die Beispiele der Konfigurationsdatei ins neu erstellte Verzeichnis kopieren. 
 
-    # cp ./enb.conf.example enb.conf
-    # cp ./sib.conf.example sib.conf
-    # cp ./rr.conf.example rr.conf
-    # cp ./rb.conf.example rb.conf
+    $ cp ~/srsRAN_4G/srsenb/enb.conf.example /etc/srsRAN/
+    $ cp ~/srsRAN_4G/srsenb/sib.conf.example /etc/srsRAN/
+    $ cp ~/srsRAN_4G/srsenb/rr.conf.example /etc/srsRAN/
+    $ cp ~/srsRAN_4G/srsenb/rb.conf.example /etc/srsRAN/
 
-    # cp ./epc.conf.example epc.conf
-    # cp ./user_db.csv.example user_db.csv
+    $ cp ~/srsRAN_4G/srsepc/epc.conf.example /etc/srsRAN/
+    $ cp ~/srsRAN_4G/srsepc/user_db.csv.example /etc/srsRAN/
+
+    $ cd /etc/srsRAN/
+
+    $ cp ./enb.conf.example enb.conf
+    $ cp ./sib.conf.example sib.conf
+    $ cp ./rr.conf.example rr.conf
+    $ cp ./rb.conf.example rb.conf
+
+    $ cp ./epc.conf.example epc.conf
+    $ cp ./user_db.csv.example user_db.csv
+
+Und die Zugriffsrechte anpassen und kontrollieren:
+
+    $ chmod g+r,o+r ./enb.conf
+    $ chmod g+r,o+r ./rb.conf
+    $ chmod g+r,o+r ./rr.conf
+    $ chmod g+r,o+r ./sib.conf
+
+    $ ls -alh /etc/srsRAN/
+    ...
+    -rw-r--r-- ... root root ... enb.conf
+    -rw------- ... root root ... enb.conf.example
+    -rw------- ... root root ... epc.conf
+    -rw------- ... root root ... epc.conf.example
+    -rw-r--r-- ... root root ... rb.conf
+    -rw------- ... root root ... rb.conf.example
+    -rw-r--r-- ... root root ... rr.conf
+    -rw------- ... root root ... rr.conf.example
+    -rw-r--r-- ... root root ... sib.conf
+    -rw------- ... root root ... sib.conf.example
+    -rw------- ... root root ... user_db.csv
+    -rw------- ... root root ... user_db.csv        
+
+Vorsicht bei den Zugriffsrechte auf die Datenbank der SIM-Karten (user_db.csv):
+
+    Warnung:
+
+    Die Datenbank der SIM-Karten (user_db.csv) enthält besonders schützenswerte
+    Informationen. 
+
+    Deshalb müssen aus Sicherheitsgründen die Leserechte auf diese Datei besonders
+    stark eingeschränkt werden und die Zugriffsrechte regelmässig kontrolliert werden!
+
+Programme installieren:
+
+    $ cp ~/srsRAN_4G/build/srsenb/src/srsenb /usr/local/bin/
+    $ cp ~/srsRAN_4G/build/srsepc/src/srsepc /usr/local/sbin/
+
+Zugriffsrechte auf die Programme anpassen:
+
+    $ chown root:root /usr/local/bin/srsenb
+    $ chown root:root /usr/local/sbin/srsepc
+    
+    $ chmod u=rwx,g=rx,o=rx /usr/local/bin/srsenb
+    $ chmod u=rwx,g=,o= /usr/local/sbin/srsepc     
+
+Zugriffsrechte kontrollieren:
+
+    $ ls -alh /usr/local/bin/srsenb
+    -rwxr-xr-x ... root root 20M ... /usr/local/bin/srsenb
+
+    $ ls -alh /usr/local/sbin/srsepc
+    -rwx------ ... root root 3.4M ... /usr/local/sbin/srsepc
 
 Kontrollieren, ob alle Konfigurationsparametern in der Beispielskonfigurationsdatei enb.conf.example mit den Angaben von:
 
-    # ~/srsRAN_4G/build/srsenb/srs/srsenb --help |more
+    # /usr/local/bin/srsenb --help |more
 
 vollständig übereinstimmen.
 
 Kontrollieren, ob alle Konfigurationsparametern in der Beispielskonfigurationsdatei epc.conf.example mit den Angaben von:
 
-    # ~/srsRAN_4G/build/srsepc/srs/srsepc --help |more
+    $ /usr/local/sbin/srsepc --help |more
 
 vollständig übereinstimmen.
 
@@ -694,8 +776,7 @@ Konfigurationsdateien der Mobilfunkantenne (eNodeB; kurz: eNB) vom eigenen Mobil
 
 Zuerst die Hauptkonfigurationsdatei:
 
-    # cd ~/srsRAN_4G/config/
-    # nano enb.conf
+    $ nano /etc/srsRAN/enb.conf
     
 Die eNodeB-Konfigurationsdatei (enb.conf) wird vom Programm srsENB eingelesen und verarbeitet. 
 
@@ -773,6 +854,13 @@ Beim Einsatz von mehreren Sendeantennen oder mehrern Empfangsantennen kann der �
 Die IP-Adressangaben belassen wir generell auf den Standardwerten. Aus Sicherheitsgründen wird nur das rechnerinterne Loopback-Netzwerk verwendet.  
 https://de.wikipedia.org/wiki/Loopback
 
+Die Ablageorte der weiteren Konfigurationsdateien vom Programm srsENB müssen im Block [enb_files] angepasst werden:
+
+    [enb_files]
+    sib_config = /etc/srsRAN/sib.config
+    rr_config = /etc/srsRAN/rr.config
+    rb_config = /etc/srsRAN/rb.config
+
 Kommen wir zur Umkonfiguration vom [rf]-Block:
 
 Gemäss den Angaben in der offiziellen Dokumentation von srsRAN sollten die Signalverstärkungswerte wie folgt für den LimeSDR Mini justiert werden:  
@@ -797,8 +885,7 @@ In der Logdatei /tmp/enb.log sollen vom Programm srsENB auch informative Mitteil
 
 Als nächstes muss die Konfigurationsdatei rr.conf angepasst werden.
 
-    # cd ~/srsRAN_4G/config/
-    # nano rr.conf
+    $ nano /etc/srsRAN/rr.conf
 
 Zum Block "cell_list = " wechseln.
 
@@ -808,8 +895,6 @@ https://de.wikipedia.org/wiki/Mittenfrequenz
 Die EARFCN kann mit dem "EARFCN calculator" auf der Webseite:  
 https://www.sqimway.com/lte_band.php  
 berechnet werden.
-
-Achtung:
 
     Achtung:
 
@@ -829,10 +914,11 @@ Mittenfrequenz:  2687.5 MHz   => EARFCN:=3425
 
 Alle Änderungen in der eNodeB-Konfigurationsdateien kontrollieren:
 
-    # diff --color=always enb.conf.example enb.conf
-    # diff --color=always rb.conf.example rb.conf
-    # diff --color=always rr.conf.example rr.conf
-    # diff --color=always sib.conf.example sib.conf        
+    $ cd /etc/srsRAN/
+    $ diff --color=always enb.conf.example enb.conf
+    $ diff --color=always rb.conf.example rb.conf
+    $ diff --color=always rr.conf.example rr.conf
+    $ diff --color=always sib.conf.example sib.conf        
 
 
 ### EPC konfigurieren
@@ -842,8 +928,7 @@ Konfigurationsdateien des Kernnetzwerks (Evolved Packet Core; kurz: EPC) vom eig
 
 Zuerst die Hauptkonfigurationsdatei:
 
-    # cd ~/srsRAN_4G/config/
-    # nano epc.conf
+    $ nano /etc/srsRAN/epc.conf
 
 Die EPC-Konfigurationsdatei (epc.conf) wird vom Programm srsEPC eingelesen und verarbeitet.
 
@@ -917,6 +1002,11 @@ konsultiert werden:
 - https://www.telecomtrainer.com/what-is-the-function-of-the-security-mode-command-smc-in-lte-communication/  
 - https://howltestuffworks.blogspot.com/2011/11/nas-security-mode-complete.html
 
+Der Ablageort der Datenbank der SIM-Karten muss im Block [hss] angepasst werden:
+
+    [hss]
+    db_file = /etc/srsRAN/user_db.csv
+
 Weiter geht es mit den Umkonfigurationen im [log]-Block:
 
 In der Logdatei /tmp/epc.log sollen vom Programm srsEPC auch informative Mitteilungen ausgegeben werden:
@@ -926,8 +1016,7 @@ In der Logdatei /tmp/epc.log sollen vom Programm srsEPC auch informative Mitteil
 
 Als nächstes muss die SIM-Karten-Datenbank gepflegt werden. Die SIM-Karten-Datenbank befindet sich in der Konfigurationsdatei "user_db.csv". Diese Konfigurationsdatei mit einem Texteditor zur Bearbeitung öffnen:
 
-    # cd ~/srsRAN_4G/config/
-    # nano user_db.csv
+    $ nano /etc/srsRAN/user_db.csv
 	 
 Die bereits bestehenden SIM-Karteneinträge mit dem Zeichen "#" am Zeilenanfang
 auskommentieren. Auskommentierte Zeilen erscheinen im Texteditor NANO in blauer
@@ -938,29 +1027,33 @@ Schriftfarbe.
 	 
 Alle Änderungen in den EPC-Konfigurationsdateien kontrollieren:
 
-    # diff --color=always epc.conf.example epc.conf
-    # diff --color=always user_db.csv.example user_db.csv
+    $ cd /etc/srsRAN/
+    $ diff --color=always epc.conf.example epc.conf
+    $ diff --color=always user_db.csv.example user_db.csv
 
-### Testlauf
-Die Spannung steigt, es steht der erste Testlauf mit der neuen Konfiguraton an. Für ein funktionstüchtiges, eigenes Mobilfunknetzwerk muss gleichzeitig das Kernnetzwerk (EPC) und die Mobilfunkantenne (eNodeB) in Betrieb stehen.
+### Systemd-Dienste einrichten
+Als nächstes müssen "Systemd System Units" für den Start und Stop der Programme srsENB und srsEPC erstellt und eingerichtet werden. 
 
-Kernnetzwerk (EPC) starten:
+Systemd-Unit "srsENB.service" für den Start und Stop des Programms srsENB:
 
-    $ cd /home/foo/srsRAN_4G/config
-    $ /home/foo/srsRAN_4G/build/srsepc/srs/srsepc ./epc.conf
+    $ nano /etc/systemd/system/srsENB.service
 
-Damit das Programm srsepc erfolgreich startet, muss dieses Programm mit root-Rechten gestartet werden!
-			
-Die Angabe vom Benutzer "foo" ist durch den entsprechenden Benutzername zu ersetzen!			
-			
-Logdatei vom Kernnetzwerk (EPC) beobachten:
+    [Unit]
+    Description=Software Radio System's 4G/LTE eNodeB implementation
+    After=network-online.target srsEPC.service
+    Wants=netzwork-online.target srsEPC.service
 
-    $ tail -f /tmp/epc.log
+    [Service]
+    User=foo
+    Group=foo
+    Type=exec
+    ExecStart=/usr/local/bin/srsenb /etc/srsran/enb.conf
+    RestartSec=2
+    Restart=always
+    OOMPolicy=stop
 
-Mobilfunkantenne (eNodeB) starten:
-
-    # cd ~/srsRAN_4G/config
-    # ~/srsRAN_4G/build/srsenb/srs/srsenb ./enb.conf 
+    [Install]
+    WantedBy=multi-user.target
 
 Achtung: 
 
@@ -968,12 +1061,109 @@ Achtung:
     
     Aus Sicherheitsgründen sollte das Programm srsenb immer ohne Root-Rechte
     gestartet werden!
-			
-Direkt nach dem Start von srsenb diese Anwendung zur Echtzeitanwendung heraufzustufen. Dazu sind root-Rechte erforderlich!
-  
-    $ renice --priority -11 -prgrp $(pidof srsenb)
 
-Logdatei von der Mobilfunkantenne (eNodeB) beobachten:
+Systemd-Unit "srsEPC.service" für den Start und Stop des Programms srsEPC:
+
+    $ nano /etc/systemd/system/srsEPC.service
+
+    [Unit]
+    Description=Software Radio System's light-weight 4G/LTE EPC implementation
+    After=network-online.target
+    Wants=netzwork-online.target
+
+    [Service]
+    #User=foo
+    #Group=foo
+    Type=exec
+    ExecStart=/usr/local/sbin/srsepc /etc/srsran/epc.conf
+    RestartSec=2
+    Restart=always
+    OOMPolicy=stop
+    LimitMEMLOCK=1.5G
+    Nice=-11
+    CPUSchedulingPolicy=rr
+    CPUSchedulingPriority=2
+    CPUSchedulingResetOnFork=false
+
+    [Install]
+    WantedBy=multi-user.target    
+
+Die Bedeutung der einzelnen Konfigurationsparametern kann in den entsprechenden Man-Pages nachgelesen werden:
+
+    # man systemd.exec
+    # man systemd.unit
+    # man systemd.service
+
+Der Konfigurationsparameter "LimitMEMLOCK=1.5G" sorgt dafür, dass beim Start vom Programm srsENB keine Fehlermeldung:
+
+    Failed to 'mlockall': {} 
+
+auftaucht Siehe dazu:  
+https://github.com/srsran/srsRAN_4G/issues/881#issuecomment-1247971384
+
+Zugriffsrechte setzen:
+
+    $ chmod u=rw,g=r,o=r /etc/systemd/system/srsENB.service
+    $ chmod u=rw,g=r,o=r /etc/systemd/system/srsEPC.service    
+
+Zugriffsrechte kontrollieren:
+
+    $ ls -alh /etc/systemd/system |grep -i srs
+    -rw-r--r-- ... root root ... srsENB.service
+    -rw-r--r-- ... root root ... srsEPC.service
+
+Systemd auffrischen:
+
+    $ systemctl daemon-reload
+
+TODO
+
+    TODO:
+
+    - Neuer Benutzer srsENB und srsEPC erstellen und die Systemd-Dienste mit
+    diesen neuen Benutzern starten.
+
+    - Absichern der Systemd-Dienste mit einem Sandkasten (Sandbox). Siehe dazu:  
+
+    https://www.redhat.com/sysadmin/mastering-systemd
+
+Und dann die neuen Dienste einschalten und starten:
+
+    $ systemctl enable srsEPC.service
+    $ systemctl start srsEPC.service
+    $ systemctl status srsEPC.service
+
+    $ systemctl enable srsENB.service
+    $ systemctl start srsENB.service
+    $ systemctl status srsENB.service
+    
+Die Ausgaben vom Programm srsEPC kontrollieren:
+
+    $ journalctl -b -u srsEPC.service
+
+Die Ausgaben vom Programm srsENB kontrollieren:
+
+    $ journalctl -b -u srsENB.service
+
+Rechner neustarten und kontrollieren, ob beim Rechnerstart automatisch die Programme srsENB und srsEPC gestartet werden:
+
+    $ reboot
+    => Rechnerneustart
+
+    $ systemctl status srsEPC.service
+    $ systemctl status srsENB.service
+
+TODO
+
+    TODO:
+    Umkonfiguration von srsENB und srsEPC, damit alle Programmausgaben in das Logbuch
+    von Systemd wandern. Entfernung der Logdateien:
+
+    - Logdatei vom Kernnetzwerk (EPC) beobachten:
+
+    $ tail -f /tmp/epc.log
+    
+    - Logdatei von der Mobilfunkantenne (eNodeB) beobachten:
 
     # tail -f /tmp/enb.log
 
@@ -1011,10 +1201,13 @@ Ausgaben der Programme srsEPC und srsENB kontrollieren:
 
 Ist die Mobilfunkantenne (eNodeB) mit dem Kernnetzwerk (EPC) verbunden, steht in den Ausgaben vom Programm srsEPC die Zeile:
 
-    Sending S1 Setup Response
-
+    $ journalctl -b -u srsEPC.service
+    => Sending S1 Setup Response
+    
 In den Ausgaben vom Programm srsENB ist zu kontrollieren, ob die korrekten Sende- und Empfangspfade vom LimeSDR Mini verwendet werden. Für Mobilfunkfrequenzbänder im Bereich von 2.0 GHz bis 3.5 GHz muss der:
 
+    $ journalctl -b -u srsENB.service
+    
     Empfangspfad: 	RX1_H	=> srsENB-Ausgabe:  Rx antenna set to LNAH
     Sendepfad:		TX1_1	=> srsENB-Ausgabe:	Tx antenna set to BAND1
 
@@ -1044,6 +1237,11 @@ ist die Ursache der fehlgeschlagenen Kalibrierung ein Programmierfehler in älte
 Ab Version 20.10 der Lime Suite ist ein fehlerkorrigierter Kalibrieralgorithmus mit der CMake-Option "-DENABLE_NEW_GAIN_BEHAVIOUR=ON" erhältlich. Man beachte den ersten Hinweis (Notes 1.) in diesem Beitrag zur Veröffentlichung der Version 20.10 der Lime Suite:  
 https://discourse.myriadrf.org/t/new-lime-suite-20-10-release/6660
 
+TODO:
+    
+    TODO
+    - Lime Suite mit der CMake-Option "-DENABLE_NEW_GAIN_BEHAVIOUR=ON" kompilieren und installieren
+
 Die Kalibration des Sendepfads und Empfangspfad wird bei jedem Programmstart von srsENB automatisch durchgeführt. Ein SDR sollte nie ohne vorgängige, erfolgreiche Kalibration im Sendepfad und Empfangspfad für den Funksendebetrieb eingesetzt werden!
 
 Beim ersten Testlauf sollte kontrolliert werden, ob die funkregulatorischen Anforderungen erfüllt werden. Dazu muss mit einem zweiten SDR das vom LimeSDR Mini ausgestrahlte Mobilfunksignal geprüft werden. Eine kostengünstige Lösung für einen zweiten SDR ist der ADALM-PLUTO (PlutoSDR). Ich verwende dazu einen Laptop mit dem Betriebssystem MS Windows 10 und der SDR-Software "SDR Console":  
@@ -1051,16 +1249,14 @@ https://www.sdr-radio.com/Console
 
 Befindet sich das vom LimeSDR Mini ausgestrahlte Mobilfunksignal im Bereich von 2685 bis 2690 MHz? Ist die Signalspitze des 4G/LTE-Mobilfunksignals genau bei der Mittenfrequenz (2687.5 MHz)?
 
-# Fehlende Schritte
+## Fehlende Schritte
 In dieser Anleitung fehlen (noch) folgende Anweisungen:
 
 TODO:
 
     TODO:
     
-    - Update dieser Installationsanleitung auf die kommende, neue LTS-Version 
-      von Ubuntu (v24.04). Dabei Bereinigung der Softwarepaketabhängigkeiten
-      mit den CMake-Optionen:
+    - Bereinigung der Softwarepaketabhängigkeiten mit den CMake-Optionen:
 
       -DENABLE_SRSUE=OFF
       -DENABLE_GUI=OFF
@@ -1068,29 +1264,34 @@ TODO:
 
       von srsRAN.
 
-    - Erstellen eines Softwarepakets (DEB) von srsRAN_4G für die professionelle
-      Softwareinstallation.
-
-    - Behandlung der srsRAN-Installation mit den Befehlen: "make install" und
-      "ldconfig"?
+    - Erstellen eines Softwarepakets (DEB) von srsRAN_4G für die
+      professionelle Softwareinstallation. Behandlung der srsRAN-
+      Installation mit den Befehlen:
+      "make install" und "ldconfig"?
     
-    - Erstellen von Systemd-Units zum Starten und Beenden der Serverdienste srsENB
-      und srsEPC.
+    - Mit einem 1x pro Minute aufgerufenen Systemd-Timer dafür sorgen, 
+      dass alle Tasks von srsENB als Echtzeitanwendungen laufen. 
+      Befehl dazu:
     
-    - Konfiguration der Systemd-Units für den Start von srsENB als 
-      Echtzeitanwendung (höhere Priorität im Task-Scheduling).
-    
-    - Konfiguration der Systemd-Units mit einem "Systemd-Watchdog" für den 
-      zuverlässigen, kontinuerlichen Betrieb der Serverdienste srsENB und srsEPC.
-    
+      $ chrt --rr --all-tasks -p 2 $(pidof srsenb)
+       
     - Überwachung der CPU-Auslastung mit "htop".
     
-    - Aus Sicherheitsgründen den Start von srsEPC ohne root-Rechte ermöglichen.
+    - Aus Sicherheitsgründen den Start von srsEPC ohne root-Rechte 
+      ermöglichen. Allenfalls Betrieb vom Kernnetwerk mit Open5GS. 
+      
+      https://open5gs.org/
     
     - Quellcode-Änderungen für den Netzwerkzugriff mit fremden SIM-Karten.
+      Oder die Verwendung von selber ausgestellten SIM-Karten. 
+      Siehe dazu:   
+
+      https://librecellular.org/user/subscribers
     
     - IP-Routerkonfiguration für die Weiterleitung der Datenpakete aus dem 
-      eigenen Mobilfunknetzwerk ins Internet.
+      eigenen Mobilfunknetzwerk ins Internet. Siehe auch:   
+      
+      https://librecellular.org/user/running
     
     - Firewallregeln für die Weiterleitung der Datenpakete aus dem eigenen 
       Mobilfunknetzwerk ins Internet.
