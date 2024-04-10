@@ -13,12 +13,19 @@ Wichtig:
     Fehlende Anweisungen sind an der Kennzeichnung
     "TODO" ersichtlich!
 
+SrsRAN ist eine kostenlose, Open Source-Software zum Betreiben eines eigenen Mobilfunknetzwerks.   
+- https://srs.io/    
+- https://github.com/srsran/srsRAN_4G   
+- https://docs.srsran.com/projects/4g
+
 SrsRAN ermöglicht den Betrieb eines eigenen 4G/LTE-Mobilfunknetzwerks auf einem Raspberry Pi 4 mit einem LimeSDR Mini. Der Raspberry Pi 4 kann mit einer USB-Powerbank ab "Batterie" betrieben werden.
 
 Diese Anleitung gilt für Ubuntu Server 20.04.
 
-Eine gute Übersicht über die Struktur eines 4G/LTE-Mobilfunknetzwerks bietet:
-https://open5gs.org/open5gs/assets/images/Open5GS_CUPS-01.pdf
+Eine gute Übersicht über die Struktur eines 4G/LTE-Mobilfunknetzwerks bietet:   
+- https://fosdem.org/2024/events/attachments/fosdem-2024-3062-i-want-my-own-cellular-network-having-fun-with-lte-networks-and-open5gs-/slides/22392/I_want_my_own_cellular_network_v3_dMwus3j.pdf  
+- https://csrc.nist.gov/CSRC/media/Presentations/LTE-Security-How-Good-is-it/images-media/day2_research_200-250.pdf    
+- https://open5gs.org/open5gs/assets/images/Open5GS_CUPS-01.pdf
 
 ## Lesehinweise
 \#  Befehlseingabe im Terminal (Bash) mit normalen Benutzerrechten (Benutzer: foo). Keine root-/Administratorrechte!
@@ -186,7 +193,15 @@ https://de.wikipedia.org/wiki/Duplexer
 Wenn Frequenzduplex (FDD) eingesetzt wird, erfolgt die Trennung von Sende- und Empfangspfad mit einem Diplexer. Beim Einsatz eines Diplexer wird der aus funkregulatorischen Anforderungen erforderliche Bandpass üblicherweise im Diplexer realisiert.  
 https://de.wikipedia.org/wiki/Diplexer
 
-Mit SDR-Hardware sind eigene Mobilfunknetzwerke mit Frequenzduplex (FDD) deutlich einfacher zu realisieren als mit Zeitduplex (TDD). Deshalb sollte mit SDR-Hardware nur Campus-Netze in FDD-Mobilfunkfrequenzbändern betrieben werden.  
+Mit SDR-Hardware sind eigene Mobilfunknetzwerke mit Frequenzduplex (FDD) deutlich einfacher zu realisieren als mit Zeitduplex (TDD). Deshalb sollte mit SDR-Hardware nur Campus-Netze in FDD-Mobilfunkfrequenzbändern betrieben werden. 
+
+    Achtung:
+
+    Die Software srsRAN unterstützt nur den Betrieb eines eigenen 
+    Mobilfunknetzwerks in den FDD-Mobilfunkfrequenzbändern!
+
+Eine Übersicht zum Funktionsumfang von srsRAN bietet:    
+https://docs.srsran.com/projects/4g/en/latest/feature_list.html#srsenb
 
 Hier eine Übersicht über alle 4G/LTE-Mobilfunkfrequenzbändern weltweit:  
 - https://en.wikipedia.org/wiki/LTE_frequency_bands  
@@ -201,9 +216,86 @@ Einige leicht verständliche Fotos und Abbildungen zum Einsatz eines Diplexers b
 https://librecellular.org/user/hardware
 
 Diplexer werden üblicherweise "massgeschneidert" für jede Mobilfunkantenne gefertigt. Damit der Hersteller den für diese Mobilfunkantenne bestellten 
-Diplexer auf diese Mobilfunkantenne massgeschneidert liefern kann, muss der Besteller bei der Diplexer-Bestellung die beiden gewünschten Grenzfrequenzen 
-angeben. Der Besteller entnimmt die Angaben der beiden Grenzfrequenzen seiner Funklizenz.  
+Diplexer auf diese Mobilfunkantenne massgeschneidert liefern kann, muss der Besteller bei der Diplexer-Bestellung die vier gewünschten Grenzfrequenzen 
+angeben:
+
+- Untere und obere Grenzfrequenz für den Downlink (Sendepfad)
+- Untere und obere Grenzfrequenz für den Uplink (Empfangspfad)
+
+Der Besteller entnimmt die Angaben der vier Grenzfrequenzen seiner Funklizenz.  
 https://de.wikipedia.org/wiki/Grenzfrequenz
+
+## SIM-Karte
+In eigenen Mobilfunknetzwerken können nur Mobilgeräte (UE) eingesetzt werden, die mit einer selber ausgestellten SIM-Karte bestückt sind.
+
+Das 4G/LTE-Kernnetzwerk (EPC) erlaubt nur das Einbuchen mit SIM-Karten, deren Daten in der SIM-Karten-Datenbank des Kernnetzwerks hinterlegt sind. Im weiteren wird die SIM-Karten-Datenbank Teilnehmerdatenbank des Kernnetzwerks (HSS) genannt. 
+
+Wichtigster Inhalt der Teilnehmerdatenbank (HSS) ist das symmetrische Schlüsselmaterial (Master key => K respektive Ki). Siehe dazu diese Artikeln und Foliensätze:
+
+- https://nickvsnetworking.com/hss-usim-authentication-in-lte-nr-4g-5g/
+- https://csrc.nist.gov/CSRC/media/Presentations/LTE-Security-How-Good-is-it/images-media/day2_research_200-250.pdf
+- http://rvs.unibe.ch/teaching/ss16_seminar/20160509_ShrimalAnukriti.pdf
+
+Zum Hinterlegen der SIM-Kartendaten sind selber ausgestellte SIM-Karten erforderlich. Für diesen Einsatzzweck geeignete SIM-Karten sind zum Beispiel bei Sysmocom erhältlich:
+
+- https://www.sysmocom.de/products/sim/
+- https://librecellular.org/user/subscribers
+
+Eine SIM-Karte, welche nicht in der Teilnehmerdatenbank (HSS) eingetragen ist, kann sich nicht in dieses Kernnetzwerk einbuchen. Einzige und wichtige Ausnahme: Notrufe (Europa: 112 / Nordamerika: 911) können auch ohne SIM-Karte oder mit fehlendem Eintrag in der Teilnehmerdatenbank (HSS) abgesetzt werden.
+
+- https://de.wikipedia.org/wiki/Notruf#Sprachnotruf_per_Telefon
+- https://www.cse.msu.edu/~ghtu/published-papers/Hu-MobiCom22.pdf
+
+Aber Achtung:
+
+    Achtung:
+
+    Leider unterstützt die Software Open5GS und die Software srsRAN keine Notrufe mit fehlenden oder fremden SIM-Karten
+    (Emergency call)!
+
+Die fehlende Unterstützung von Notrufen (emergency call) mit fehlenden oder fremden SIM-Karten in der Software Open5GS ist hier dokumentiert:   
+https://open5gs.org/open5gs/features/
+
+SrsEPC ist Teil der Software srsRAN. SrsEPC ermöglicht den Betrieb eines 4G/LTE-Kernnetzwerks zu Testzwecken. Da sich srsEPC nur für den Testbetrieb eignet, darf angenommen werden, dass srsEPC keine Notrufe (emergency call) mit fehlenden oder fremden SIM-Karten unterstützt.   
+https://docs.srsran.com/projects/4g/en/latest/feature_list.html#srsepc
+
+Wenn ein eigenes Mobilfunknetzwerk das Einbuchen von fremden SIM-Karten erlauben soll, so muss ein eigenes 2G/GSM-Mobilfunknetzwerk realisiert werden. Ein eigenes 2G/GSM-Mobilfunknetzwerk kann mit der Software von Osmocom und einem LimeSDR (Mini) realisiert werden.   
+https://osmocom.org/projects/cellular-infrastructure/wiki
+
+OsmoTRX in Kombination mit OsmoBTS ermöglicht den Betrieb einer eigenen 2G/GSM-Mobilfunkantenne (BTS).   
+- OsmoTRX (SDR-Ansteuerung) https://osmocom.org/projects/osmotrx/wiki/OsmoTRX     
+- OsmoBTS (BTS) https://osmocom.org/projects/osmobts/wiki      
+
+- https://de.wikipedia.org/wiki/Base_Transceiver_Station      
+
+Das eigene 2G/GSM-Kernnetzwerk kann mit Hilfe von: 
+
+- OsmoBSC (BSC) https://osmocom.org/projects/osmobsc/wiki    
+- OsmoPCU (PCU) https://osmocom.org/projects/osmopcu/wiki/OsmoPCU    
+- OsmoMGW https://osmocom.org/projects/osmo-mgw/wiki    
+- OsmoSTP https://osmocom.org/projects/osmo-stp/wiki    
+- OsmoMSC (MSC) https://osmocom.org/projects/osmomsc/wiki    
+- OsmoSGSN (SGSN) https://osmocom.org/projects/osmosgsn/wiki/OsmoSGSN    
+- OsmoGGSN (GGSN) https://osmocom.org/projects/openggsn/wiki/OsmoGGSN    
+- OsmoHLR (HLR) https://osmocom.org/projects/osmo-hlr/wiki/OsmoHLR    
+- Osmo-sip-connector https://osmocom.org/projects/osmo-sip-conector/wiki    
+
+- https://de.wikipedia.org/wiki/Base_Station_Controller    
+- https://de.wikipedia.org/wiki/Mobile-services_Switching_Centre    
+- https://de.wikipedia.org/wiki/Packet_Control_Unit    
+- https://de.wikipedia.org/wiki/General_Packet_Radio_Service#SGSN_(Serving_GPRS_Support_Node)    
+- https://de.wikipedia.org/wiki/General_Packet_Radio_Service#GGSN_(Gateway_GPRS_Support_Node)    
+- https://de.wikipedia.org/wiki/Home_Location_Register   
+
+realisiert werden. Die Konfigurationskniffe, welche das Einbuchen von fremden SIM-Karten in das eigene 2G/GSM-Mobilfunknetzwerk erlauben, sind ausführlich im Kapitel 6.3 - "Configuring the Subscribers Create on Demand Feature" der OsmoHLR-Bedienungsanleitung beschrieben:
+- http://ftp.osmocom.org/docs/latest/osmohlr-usermanual.pdf
+- https://nickvsnetworking.com/gsm-with-osmocom-part-7-the-hlr-home-location-register-and-friends/
+
+Erst ab der dritten Generation des Mobilfunkstandards (3G/UMTS) wird die gegenseitige Authentifizierung (mutual authentication) unterstützt. Die gegenseitige Authentifizierung mit symmetrischem Schlüsselmaterial erfolgt im 3G/UMTS-Mobilfunknetzwerk über das Verfahren AKA. Auch alle neueren, im Produktiveinsatz befindlichen Generationen des Mobilfunkstandards (4G/LTE + 5G) verwenden das Verfahren AKA (in einer verbesserten Form). 
+- https://www.umtsworld.com/technology/security.htm
+- https://nickvsnetworking.com/hss-usim-authentication-in-lte-nr-4g-5g/
+- https://en.wikipedia.org/wiki/Authentication_and_Key_Agreement#AKA_in_UMTS
+- https://www.ericsson.com/en/blog/2021/9/authentication-and-key-agreements
 
 # Software 
 
@@ -725,11 +817,11 @@ Und die Zugriffsrechte anpassen und kontrollieren:
     -rw------- ... root root ... user_db.csv
     -rw------- ... root root ... user_db.csv        
 
-Vorsicht bei den Zugriffsrechte auf die Datenbank der SIM-Karten (user_db.csv):
+Vorsicht bei den Zugriffsrechte auf die Teilnehmerdatenbank (user_db.csv):
 
     Warnung:
 
-    Die Datenbank der SIM-Karten (user_db.csv) enthält besonders schützenswerte
+    Die Teilnehmerdatenbank (user_db.csv) enthält besonders schützenswerte
     Informationen. 
 
     Deshalb müssen aus Sicherheitsgründen die Leserechte auf diese Datei besonders
@@ -1002,7 +1094,7 @@ konsultiert werden:
 - https://www.telecomtrainer.com/what-is-the-function-of-the-security-mode-command-smc-in-lte-communication/  
 - https://howltestuffworks.blogspot.com/2011/11/nas-security-mode-complete.html
 
-Der Ablageort der Datenbank der SIM-Karten muss im Block [hss] angepasst werden:
+Der Ablageort der Teilnehmerdatenbank (HSS) muss im Block [hss] angepasst werden:
 
     [hss]
     db_file = /etc/srsRAN/user_db.csv
@@ -1014,7 +1106,7 @@ In der Logdatei /tmp/epc.log sollen vom Programm srsEPC auch informative Mitteil
     [log]
     all_level = info
 
-Als nächstes muss die SIM-Karten-Datenbank gepflegt werden. Die SIM-Karten-Datenbank befindet sich in der Konfigurationsdatei "user_db.csv". Diese Konfigurationsdatei mit einem Texteditor zur Bearbeitung öffnen:
+Als nächstes muss die Teilnehmerdatenbank (HSS) gepflegt werden. Die Teilnehmerdatenbank (HSS) befindet sich in der Konfigurationsdatei "user_db.csv". Diese Konfigurationsdatei mit einem Texteditor zur Bearbeitung öffnen:
 
     $ nano /etc/srsRAN/user_db.csv
 	 
@@ -1167,6 +1259,9 @@ TODO
 
     # tail -f /tmp/enb.log
 
+### Erster Testlauf
+Beim ersten Testlauf sollten einige Aspekte kontrolliert werden.
+
 Auf welchen IP-Adressen und Serverports horcht das Kernnetzwerk (EPC) auf eingehende SCTP- und UDP-Netzwerkverbindungen?  
 https://de.wikipedia.org/wiki/Stream_Control_Transmission_Protocol
 
@@ -1275,16 +1370,18 @@ TODO:
     
       $ chrt --rr --all-tasks -p 2 $(pidof srsenb)
        
-    - Überwachung der CPU-Auslastung mit "htop".
+    - Überwachung der CPU-Auslastung mit "htop". Siehe dazu:
+
+      https://docs.srsran.com/projects/4g/en/latest/app_notes/source/pi4/source/index.html#running-the-pi4-enodeb
     
-    - Aus Sicherheitsgründen den Start von srsEPC ohne root-Rechte 
-      ermöglichen. Allenfalls Betrieb vom Kernnetwerk mit Open5GS. 
+    - SrsEPC eignet sich nur für Testzwecke. Langzeitbetrieb vom
+      Kernnetwerk mit der Software Open5GS. 
+
+      https://docs.srsran.com/projects/4g/en/latest/feature_list.html#srsepc
       
       https://open5gs.org/
     
-    - Quellcode-Änderungen für den Netzwerkzugriff mit fremden SIM-Karten.
-      Oder die Verwendung von selber ausgestellten SIM-Karten. 
-      Siehe dazu:   
+    - Verwendung von selber ausgestellten SIM-Karten. Siehe dazu: 
 
       https://librecellular.org/user/subscribers
     
