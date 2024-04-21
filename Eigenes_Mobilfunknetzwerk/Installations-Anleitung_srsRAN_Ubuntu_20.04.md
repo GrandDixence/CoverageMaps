@@ -55,7 +55,7 @@ https://cyberloginit.com/2018/05/03/build-a-lte-network-with-srslte-and-program-
 ## Anforderungen an den SDR
 Für den Betrieb eines 4G/LTE-Mobilfunknetzwerks mit einem SDR muss die eingesetzte SDR-Hardware das gleichzeitige Senden und Empfangen von Funksignalen (Full Duplex) unterstützten. Weiter muss die SDR-Hardware den Funkbetrieb mit Zeitstempeln (timestamping) unterstützen. 
 
-Aktuell die billigste SDR-Hardware welche den Funkbetrieb mit "Full Duplex" und "Timestamping" unterstützt, ist der LimeSDR Mini. 
+Aktuell die billigste SDR-Hardware, welche den Funkbetrieb mit "Full Duplex" und "Timestamping" unterstützt, ist der LimeSDR Mini. 
 
 In naher Zukunft könnte der ADALM-PLUTO (PlutoSDR) den LimeSDR Mini als die billigste SDR-Hardware mit "Full Duplex"- und Timestamping-Unterstützung ablösen. Aktuell fehlt aber dem PlutoSDR noch die Timestamping-Unterstützung im offiziellen Quellcode der Software (SoapySDR)! Siehe dazu:  
 https://www.quantulum.co.uk/blog/private-lte-with-analog-adalm-pluto/
@@ -124,12 +124,11 @@ Mobilfunknetzwerke stellen hohe Anforderungen an die Frequenz- und Phasensynchro
 
 Um diese Anforderungen an die Synchronisation des ausgestrahlten Funksignals zu erfüllen, muss der SDR mit einer sehr genauen Zeitbasis, wie einer Atomuhr synchronisiert sein. 
 
-Fehlt die Takt- und Frequenzsynchronisation vom SDR zu einer Atomuhr, führt dies zu massiven Performanceeinbussen. Diese Performanceeinbussen sind in Form von erheblich reduzierten erreichbaren Datenübertragungsraten im eigenen Mobilfunknetzwerk spürbar und messbar.
+Fehlt die Takt- und Frequenzsynchronisation vom SDR zu einer Atomuhr, führt dies zu massiven Performanceeinbussen und Verbindungsverluste. Diese Performanceeinbussen sind in Form von erheblich reduzierten erreichbaren Datenübertragungsraten im eigenen Mobilfunknetzwerk spürbar und messbar.
 
 Hochwertige SDR-Hardware verfügt über einen Anschluss zum Einspeisen eines externen Taktsignals über eine mechanisch robuste N- oder SMA-Steckverbindung. Dieser Anschluss wird häufig mit "EXT CLOCK" bezeichnet.
 
-Leider ist der LimeSDR-Mini kein hochwertiger SDR. Der LimeSDR-Mini verfügt zwar über einen mit einer mechanisch ungenügend robusten U.FL-Steckverbindung 
-ausgerüsteten "EXT CLOCK"-Anschluss auf der Leiterplatte. Aber zur Nutzung von diesem "EXT CLOCK"-Anschluss müssen auf der Leiterplatte vom LimeSDR-Mini einige Nullohmwiderstände umgelöstet werden!  
+Leider ist der LimeSDR-Mini kein hochwertiger SDR. Der LimeSDR-Mini verfügt zwar über einen mit einer mechanisch ungenügend robusten U.FL-Steckverbindung ausgerüsteten "EXT CLOCK"-Anschluss auf der Leiterplatte. Aber zur Nutzung von diesem "EXT CLOCK"-Anschluss müssen auf der Leiterplatte vom LimeSDR-Mini einige Nullohmwiderstände umgelöstet werden!  
 - https://wiki.myriadrf.org/LimeSDR-Mini_v1.1_hardware_description  
 - https://discourse.myriadrf.org/t/enabling-external-clock-on-limesdr-mini-1-2/3066
 
@@ -172,7 +171,9 @@ https://de.wikipedia.org/wiki/Mobilfunkfrequenzen_in_der_Schweiz
 Mit der Funklizenz verknüpft sind funkregulatorische Anforderungen. Insbesondere darf der Funksender keine anderen Funkanwendungen stören. Deshalb ist für jeden eingesetzten SDR im Sendepfad zwischen dem Leistungsverstärker (Power Amplifier -> kurz: PA) und der Mobilfunkantennne ein sehr gut filternder Bandpass zwingend erforderlich. Die funkregulatorischen Anforderungen definieren die genauen Anforderungen an diesen Bandpass.  
 https://de.wikipedia.org/wiki/Bandpass
 
-Da die SDR-Hardwaree über ihre Sendeeinheit(en) üblicherweise nur ein sehr schwaches Funksignal im ein- oder zweistelligen Milliwatt-Bereich liefert, muss dieses (Mobil-)Funksignal mit einem Leistungsverstärker (PA) verstärkt werden.
+Da die SDR-Hardwaree über ihre Sendeeinheit(en) üblicherweise nur ein sehr schwaches Funksignal im ein- oder zweistelligen Milliwatt-Bereich liefert, muss dieses (Mobil-)Funksignal mit einem Leistungsverstärker (PA) verstärkt werden.    
+- https://limemicro.com/app/uploads/2015/08/LMS7002M_Measurements-v1_05.pdf    
+- https://wiki.batc.org.uk/LimeSDR_Mini_Output_Power_Levels    
 
 Wie stark das Mobilfunksignal mit dem Leistungsverstärker (PA) verstärkt werden darf, ist der Funklizenz zu entnehmen.
 
@@ -259,37 +260,14 @@ https://open5gs.org/open5gs/features/
 SrsEPC ist Teil der Software srsRAN. SrsEPC ermöglicht den Betrieb eines 4G/LTE-Kernnetzwerks zu Testzwecken. Da sich srsEPC nur für den Testbetrieb eignet, darf angenommen werden, dass srsEPC keine Notrufe (emergency call) mit fehlenden oder fremden SIM-Karten unterstützt.   
 https://docs.srsran.com/projects/4g/en/latest/feature_list.html#srsepc
 
-Wenn ein eigenes Mobilfunknetzwerk das Einbuchen von fremden SIM-Karten erlauben soll, so muss ein eigenes 2G/GSM-Mobilfunknetzwerk realisiert werden. Ein eigenes 2G/GSM-Mobilfunknetzwerk kann mit der Software von Osmocom und einem LimeSDR (Mini) realisiert werden.   
+Wenn ein eigenes Mobilfunknetzwerk das Einbuchen von fremden SIM-Karten erlauben soll, so muss ein eigenes 2G/GSM-Mobilfunknetzwerk realisiert werden. Ein eigenes 2G/GSM-Mobilfunknetzwerk kann mit der Software von OsmoCOM und einem LimeSDR (Mini) realisiert werden.   
 https://osmocom.org/projects/cellular-infrastructure/wiki
 
-OsmoTRX in Kombination mit OsmoBTS ermöglicht den Betrieb einer eigenen 2G/GSM-Mobilfunkantenne (BTS).   
-- OsmoTRX (SDR-Ansteuerung) https://osmocom.org/projects/osmotrx/wiki/OsmoTRX     
-- OsmoBTS (BTS) https://osmocom.org/projects/osmobts/wiki      
+Die Installation und Konfiguration eines eigenen 2G/GSM-Mobilfunknetzwerks mit OsmoCOM und einem LimeSDR Mini ist in der ausführlichen Anleitung:
 
-- https://de.wikipedia.org/wiki/Base_Transceiver_Station      
+https://github.com/GrandDixence/CoverageMaps/blob/main/Eigenes_Mobilfunknetzwerk/Installations-Anleitung_OsmoCOM_Ubuntu_20.04.md
 
-Das eigene 2G/GSM-Kernnetzwerk kann mit Hilfe von: 
-
-- OsmoBSC (BSC) https://osmocom.org/projects/osmobsc/wiki    
-- OsmoPCU (PCU) https://osmocom.org/projects/osmopcu/wiki/OsmoPCU    
-- OsmoMGW https://osmocom.org/projects/osmo-mgw/wiki    
-- OsmoSTP https://osmocom.org/projects/osmo-stp/wiki    
-- OsmoMSC (MSC) https://osmocom.org/projects/osmomsc/wiki    
-- OsmoSGSN (SGSN) https://osmocom.org/projects/osmosgsn/wiki/OsmoSGSN    
-- OsmoGGSN (GGSN) https://osmocom.org/projects/openggsn/wiki/OsmoGGSN    
-- OsmoHLR (HLR) https://osmocom.org/projects/osmo-hlr/wiki/OsmoHLR    
-- Osmo-sip-connector https://osmocom.org/projects/osmo-sip-conector/wiki    
-
-- https://de.wikipedia.org/wiki/Base_Station_Controller    
-- https://de.wikipedia.org/wiki/Mobile-services_Switching_Centre    
-- https://de.wikipedia.org/wiki/Packet_Control_Unit    
-- https://de.wikipedia.org/wiki/General_Packet_Radio_Service#SGSN_(Serving_GPRS_Support_Node)    
-- https://de.wikipedia.org/wiki/General_Packet_Radio_Service#GGSN_(Gateway_GPRS_Support_Node)    
-- https://de.wikipedia.org/wiki/Home_Location_Register   
-
-realisiert werden. Die Konfigurationskniffe, welche das Einbuchen von fremden SIM-Karten in das eigene 2G/GSM-Mobilfunknetzwerk erlauben, sind ausführlich im Kapitel 6.3 - "Configuring the Subscribers Create on Demand Feature" der OsmoHLR-Bedienungsanleitung beschrieben:
-- http://ftp.osmocom.org/docs/latest/osmohlr-usermanual.pdf
-- https://nickvsnetworking.com/gsm-with-osmocom-part-7-the-hlr-home-location-register-and-friends/
+beschrieben.
 
 Erst ab der dritten Generation des Mobilfunkstandards (3G/UMTS) wird die gegenseitige Authentifizierung (mutual authentication) unterstützt. Die gegenseitige Authentifizierung mit symmetrischem Schlüsselmaterial erfolgt im 3G/UMTS-Mobilfunknetzwerk über das Verfahren AKA. Auch alle neueren, im Produktiveinsatz befindlichen Generationen des Mobilfunkstandards (4G/LTE + 5G) verwenden das Verfahren AKA (in einer verbesserten Form). 
 - https://www.umtsworld.com/technology/security.htm
@@ -349,6 +327,7 @@ kontrolliert werden, ob diese Software bekannte Sicherheitslücken enthält. Wen
 Hinweise, Tricks und Tipps zum Einsatz eines Raspberry Pi 4 bieten die Beiträge unter:  
 https://www.lancom-forum.de/fragen-zur-lancom-systems-routern-und-gateways-f41/vdsl-umzug-glasfaser-neuer-router-t17926.html#p101750
 
+### Softwarepaketverwaltung
 Die Softwarepaketverwaltung mit APT so konfigurieren, dass keine empfohlenen (recommends) und vorgeschlagene (suggests) Softwarepakete bei der Installation von Softwarepaketen mit dem Befehl "apt install <Softwarepaket> mitinstalliert werden. Dazu muss die Konfigurationsdatei /etc/apt/apt.conf.d/01custom angepasst werden.
 
 Vorgängig den Texteditor NANO installieren:
@@ -386,7 +365,6 @@ werden:
     $ apt install iptables
     $ apt install util-linux
     $ apt install coreutils
-    $ apt install bsdutils
     $ apt install findutils
     $ apt install grep
     $ apt install conntrack
@@ -400,6 +378,7 @@ Anzahl der nicht mit Sicherheitsupdates versorgten Softwarepakete feststellen:
 	
 Nicht mit Sicherheitsupdates versorgte Softwarepakete entstammen dem Paketdepot (Repository) Universe oder Multiverse!
 
+### Drosselung der CPU-Taktfrequenz
 Damit srsRAN korrekt funktioniert, muss die automatische Drosselung der CPU-Taktfrequenz ausgeschaltet werden. Dadurch steigt der Stromverbrauch des Raspberry Pi massiv an!
 
 Programm cpupower installieren:
@@ -423,6 +402,7 @@ Aktuelle CPU-Taktfrequenz auslesen:
                       within this range.
       current CPU frequency: 1.50 GHz (asserted by call to hardware)
 
+### Hardware-Watchdog
 Als nächster muss der Hardware-Watchdog aktiviert werden. Der Hardware-Watchdog ist eine Hardwareschaltung, welche den Rechner neustartet, wenn der Hardware-Watchdog nicht regelmässig eine Meldung von einem Software-Watchdog erhält. 
 
 Der Software-Watchdog ist eine auf dem Rechner laufende Software, welche sich regelmässig beim Hardware-Watchdog meldet. 
@@ -478,6 +458,7 @@ Linux-Kernel einfrieren lassen  => **!!! Vorgängig alle Daten sichern !!!**
     $ echo c > /proc/sysrq-trigger
     => Rechner wird nach 30 Sekunden automatisch neu gestartet.
 
+### Firewallregeln
 Die Firewallkonfiguration ist so anzupassen, dass auf der Loopback-Netzwerkschnittstelle Netzwerkverbindungen mit dem Netzwerkprotokoll SCTP gestattet sind.  
 - https://de.wikipedia.org/wiki/Stream_Control_Transmission_Protocol  
 - https://www.ionos.de/digitalguide/server/knowhow/sctp-stream-control-transmission-protocol/
@@ -536,6 +517,7 @@ Aktuelle Filtertabellen der Linux-Firewall abfragen:
     ...		ACCEPT		udp		--	* 	lo	127.0.0/8	127.0.0.8	ctstate NEW
     ...		ACCEPT 		sctp	--	* 	lo 	127.0.0/8	127.0.0/8	ctstate NEW
 
+### Überflüssige Echtzeitanwendungen
 Überflüssige Echtzeitanwendungen ausschalten:
 
     $ systemctl status multipathd.service
@@ -543,6 +525,7 @@ Aktuelle Filtertabellen der Linux-Firewall abfragen:
     $ systemctl disable multipathd.service
     $ systemctl mask multipathd.service
 
+### Logbuch des Rechners
 Das durch Systemd geführte Logbuch in der Konfigurationsdatei /etc/systemd/journald.conf korrekt konfigurieren:
 
     $ nano /etc/systemd/journald.conf
@@ -962,6 +945,24 @@ https://docs.srsran.com/projects/4g/en/latest/app_notes/source/pi4/source/index.
     tx_gain = 60
     rx_gain = 40
 
+Je grösser der Wert vom Konfigurationsparameter:
+
+    tx_gain 
+
+desto stärker wird das Mobilfunksignal am Antennenanschluss der SDR-Hardware ausgegeben. Der Wert vom Konfigurationsparameter rx-gain sollte nicht grösser als 60 dB sein, um ein Übersteuern zu vermeiden.    
+https://de.wikipedia.org/wiki/%C3%9Cbersteuern_(Signalverarbeitung)
+
+Je grösser der Wert vom Konfigurationsparameter:
+
+    rx_gain 
+
+desto stärker wird das Mobilfunksignal von der SDR-Hardware empfangen. Der Wert vom Konfigurationsparameter rx-gain sollte nicht grösser als 40 dB sein, um ein Übersteuern zu vermeiden.
+https://de.wikipedia.org/wiki/%C3%9Cbersteuern_(Signalverarbeitung)
+
+In Gebäuden sollten der Wert vom Konfigurationsparameter rx-gain nicht grösser als 10 dB sein.
+
+Mit diesen angepassten Zeilen wird die Signalverstärkung im Sende- und Empfangspfad der SDR-Hardware angepasst.
+
 Als nächstes ist der Zugriff auf die SDR-Hardware zu konfigurieren. Der Zugriff von srsRAN auf die SDR-Hardware soll über SoapySDR (device_name = soapy) erfolgen.
 
     [rf]
@@ -1208,17 +1209,6 @@ Systemd auffrischen:
 
     $ systemctl daemon-reload
 
-TODO
-
-    TODO:
-
-    - Neuer Benutzer srsENB und srsEPC erstellen und die Systemd-Dienste mit
-    diesen neuen Benutzern starten.
-
-    - Absichern der Systemd-Dienste mit einem Sandkasten (Sandbox). Siehe dazu:  
-
-    https://www.redhat.com/sysadmin/mastering-systemd
-
 Und dann die neuen Dienste einschalten und starten:
 
     $ systemctl enable srsEPC.service
@@ -1262,8 +1252,12 @@ TODO
 ### Erster Testlauf
 Beim ersten Testlauf sollten einige Aspekte kontrolliert werden.
 
+#### Netzwerkverbindungen kontrollieren
 Auf welchen IP-Adressen und Serverports horcht das Kernnetzwerk (EPC) auf eingehende SCTP- und UDP-Netzwerkverbindungen?  
-https://de.wikipedia.org/wiki/Stream_Control_Transmission_Protocol
+- https://de.wikipedia.org/wiki/Stream_Control_Transmission_Protocol    
+- https://de.wikipedia.org/wiki/User_Datagram_Protocol   
+
+Kontrolle mit root-Rechten:
 
     $ ss --sctp --udp --tcp --listening --numeric --process
     Netid 	State		Recv-Q		Send-Q		Local Adddress:Port		Peer Address:Port 		Process
@@ -1286,19 +1280,22 @@ Kommen die SCTP-Netzwerkverbindungen zwischen Mobilfunkantenne (eNodeB) und Kern
     UNCONN		...
     `- ESTAB	0			0			127.0.0.1%lo:49937		127.0.0.1.100:36412		
 
+#### Firewallregeln kontrollieren
 Funktionieren die SCTP-Firewallregeln einwandfrei?
 
     $ conntrack -E |grep -i sctp
     ...
     [UPDATE] sctp ... ESTABLISHED src=127.0.0.1 dst=127.0.1.100 ... dport=36412 ... [ASURED]
 
+#### Programmausgaben kontrollieren
 Ausgaben der Programme srsEPC und srsENB kontrollieren:
 
 Ist die Mobilfunkantenne (eNodeB) mit dem Kernnetzwerk (EPC) verbunden, steht in den Ausgaben vom Programm srsEPC die Zeile:
 
     $ journalctl -b -u srsEPC.service
     => Sending S1 Setup Response
-    
+
+#### Sende- und Empfangspfad kontrollieren    
 In den Ausgaben vom Programm srsENB ist zu kontrollieren, ob die korrekten Sende- und Empfangspfade vom LimeSDR Mini verwendet werden. Für Mobilfunkfrequenzbänder im Bereich von 2.0 GHz bis 3.5 GHz muss der:
 
     $ journalctl -b -u srsENB.service
@@ -1315,15 +1312,17 @@ Für Mobilfunkfrequenzbänder im Bereich von 10 MHz bis 2 GHz muss der:
 
 verwendet werden.
 
-- https://wiki.myriadrf.org/LimeSDR-Mini_v1.2_hardware_description#RF_Frequency_Range  
+- https://wiki.myriadrf.org/LimeSDR-Mini_v1.2_hardware_description#RF_Frequency_Range    
+- https://gist.github.com/JamesHagerman/fafec6ee2ee076fe7cda4cf4dd74edd0#file-stslte-notes-md     
 - https://github.com/srsran/srsRAN_4G/issues/437#issuecomment-586745598
 
+#### Kalibration vom SDR kontrollieren   
 Häufig schlägt die Kalibration des Empfangspfad vom LimeSDR Mini mit der 
 Fehlermeldung:
 
     [ERROR] Rx calibration: MCU error 5 (Loopback signal weak: not connected/insufficient gain?)
 
-in den Ausgaben vom Programm srsENB fehl. Die Kalibration des LimeSDR (Mini) schlägt häufig fehl, wenn der hochfrequente Empfangspfad (RX1_H, LNAH) kalibriert werden soll. 
+in den Ausgaben vom Programm srsENB fehl.  
 
 Gemäss dem Beitrag von Andrew Back am 11.11.2020 um 14:58 Uhr unter:    
 https://discourse.myriadrf.org/t/srslte-and-limesdr-mini/6688/5  
@@ -1337,10 +1336,27 @@ TODO:
     TODO
     - Lime Suite mit der CMake-Option "-DENABLE_NEW_GAIN_BEHAVIOUR=ON" kompilieren und installieren
 
-Die Kalibration des Sendepfads und Empfangspfad wird bei jedem Programmstart von srsENB automatisch durchgeführt. Ein SDR sollte nie ohne vorgängige, erfolgreiche Kalibration im Sendepfad und Empfangspfad für den Funksendebetrieb eingesetzt werden!
+Die Kalibration des Sendepfads und Empfangspfad wird bei jedem Programmstart von srsENB automatisch durchgeführt. Ein SDR sollte nie ohne vorgängige, erfolgreiche Kalibration im Sendepfad und Empfangspfad für den Funksendebetrieb eingesetzt werden!   
+- https://wiki.myriadrf.org/LMS7002Mr3_Calibration_Using_MCU#LMS7002M_Setup_Steps_Needed_for_MCU_Image_Calibration_Execution    
+- https://discourse.myriadrf.org/t/correct-way-to-calibrate-limesdr/2378      
 
-Beim ersten Testlauf sollte kontrolliert werden, ob die funkregulatorischen Anforderungen erfüllt werden. Dazu muss mit einem zweiten SDR das vom LimeSDR Mini ausgestrahlte Mobilfunksignal geprüft werden. Eine kostengünstige Lösung für einen zweiten SDR ist der ADALM-PLUTO (PlutoSDR). Ich verwende dazu einen Laptop mit dem Betriebssystem MS Windows 10 und der SDR-Software "SDR Console":  
-https://www.sdr-radio.com/Console
+#### Mobilfunksignal mit SDR kontrollieren
+Beim ersten Testlauf sollte kontrolliert werden, ob die funkregulatorischen Anforderungen erfüllt werden. Dazu muss mit einem zweiten SDR das vom LimeSDR Mini ausgestrahlte Mobilfunksignal geprüft werden. Eine kostengünstige Lösung für einen zweiten SDR ist der ADALM-PLUTO (PlutoSDR).   
+- https://www.analog.com/en/resources/evaluation-hardware-and-software/evaluation-boards-kits/adalm-pluto.html#eb-overview
+- https://wiki.analog.com/university/tools/pluto/users/firmware   
+- https://wiki.analog.com/university/tools/pluto/drivers/windows#windows_drivers   
+- https://www.rtl-sdr.com/plutosdr-quickstart-guide/   
+
+Wird das Mobilfunksignal des eigenen 4G/LTE-Mobilfunksignals nur in einem Mobilfunkfrequenzband < 1000 MHz ausgestrahlt, kann als zweite SDR-Hardware der billigere RTL-SDR Blog V3 oder der RTL-SDR Blog V4 eingesetzt werden.   
+- https://www.rtl-sdr.com/buy-rtl-sdr-dvb-t-dongles/   
+- https://www.rtl-sdr.com/rtl-sdr-blog-v4-dongle-initial-release/   
+- https://www.rtl-sdr.com/rtl-sdr-quick-start-guide/   
+- https://www.rtl-sdr.com/manual-installation-of-sdr/    
+
+Ich verbinde den zweiten SDR per USB-Kabel mit einem Laptop. Auf dem Laptop läuft das Betriebssystem MS Windows 10 und die SDR-Software "SDR Console":    
+- https://www.sdr-radio.com/Console   
+- https://www.sdr-radio.com/pluto   
+- https://www.sdr-radio.com/rtl-dongles   
 
 Befindet sich das vom LimeSDR Mini ausgestrahlte Mobilfunksignal im Bereich von 2685 bis 2690 MHz? Ist die Signalspitze des 4G/LTE-Mobilfunksignals genau bei der Mittenfrequenz (2687.5 MHz)?
 
@@ -1363,6 +1379,16 @@ TODO:
       professionelle Softwareinstallation. Behandlung der srsRAN-
       Installation mit den Befehlen:
       "make install" und "ldconfig"?
+
+    - Absichern der Systemd-Dienste mit einem Sandkasten (Sandbox). Siehe dazu:  
+
+      https://www.redhat.com/sysadmin/mastering-systemd
+
+    - Ein eigener Benutzer ohne root-Rechte für jeden einzelnen Systemd-Dienste
+      erstellen und alle selber erstellten Systemd-Dienste mit diesen neuen 
+      Benutzern starten. Siehe dazu:
+
+      https://superuser.com/questions/77617/how-can-i-create-a-non-login-user      
     
     - Mit einem 1x pro Minute aufgerufenen Systemd-Timer dafür sorgen, 
       dass alle Tasks von srsENB als Echtzeitanwendungen laufen. 
