@@ -171,7 +171,7 @@ https://de.wikipedia.org/wiki/Mobilfunkfrequenzen_in_der_Schweiz
 Mit der Funklizenz verknüpft sind funkregulatorische Anforderungen. Insbesondere darf der Funksender keine anderen Funkanwendungen stören. Deshalb ist für jeden eingesetzten SDR im Sendepfad zwischen dem Leistungsverstärker (Power Amplifier -> kurz: PA) und der Mobilfunkantennne ein sehr gut filternder Bandpass zwingend erforderlich. Die funkregulatorischen Anforderungen definieren die genauen Anforderungen an diesen Bandpass.  
 https://de.wikipedia.org/wiki/Bandpass
 
-Da die SDR-Hardwaree über ihre Sendeeinheit(en) üblicherweise nur ein sehr schwaches Funksignal im ein- oder zweistelligen Milliwatt-Bereich liefert, muss dieses (Mobil-)Funksignal mit einem Leistungsverstärker (PA) verstärkt werden.    
+Da die SDR-Hardware über ihre Sendeeinheit(en) üblicherweise nur ein sehr schwaches Funksignal im ein- oder zweistelligen Milliwatt-Bereich liefert, muss dieses (Mobil-)Funksignal mit einem Leistungsverstärker (PA) verstärkt werden.    
 - https://limemicro.com/app/uploads/2015/08/LMS7002M_Measurements-v1_05.pdf    
 - https://wiki.batc.org.uk/LimeSDR_Mini_Output_Power_Levels    
 

@@ -200,7 +200,7 @@ https://de.wikipedia.org/wiki/GSM-R
 Mit der Funklizenz verknüpft sind funkregulatorische Anforderungen. Insbesondere darf der Funksender keine anderen Funkanwendungen stören. Deshalb ist für jeden eingesetzten SDR im Sendepfad zwischen dem Leistungsverstärker (Power Amplifier -> kurz: PA) und der Mobilfunkantennne ein sehr gut filternder Bandpass zwingend erforderlich. Die funkregulatorischen Anforderungen definieren die genauen Anforderungen an diesen Bandpass.  
 https://de.wikipedia.org/wiki/Bandpass
 
-Da die SDR-Hardwaree über ihre Sendeeinheit(en) üblicherweise nur ein sehr schwaches Funksignal im ein- oder zweistelligen Milliwatt-Bereich liefert, muss dieses (Mobil-)Funksignal mit einem Leistungsverstärker (PA) verstärkt werden.    
+Da die SDR-Hardware über ihre Sendeeinheit(en) üblicherweise nur ein sehr schwaches Funksignal im ein- oder zweistelligen Milliwatt-Bereich liefert, muss dieses (Mobil-)Funksignal mit einem Leistungsverstärker (PA) verstärkt werden.    
 - https://limemicro.com/app/uploads/2015/08/LMS7002M_Measurements-v1_05.pdf    
 - https://wiki.batc.org.uk/LimeSDR_Mini_Output_Power_Levels    
 
@@ -837,14 +837,63 @@ Sicherheitswarnung:
 #### OsmoMGW
 Jegliche Sprachtelefonie wird über das "Media Gateway" (OsmoMGW) abgewickelt. Deshalb ist OsmoMGW für Sprachtelefonie im eigenen 2G/GSM-Mobilfunknetzwerk zwingend erforderlich. 
 
-In der Konfiguarationsdatei von OsmoMGW sind die mit dem Ausrufezeichen "!" auskommentierten Zeilen zu löschen:
+Es werden zwei "Media Gateways" benötigt (OsmoMGW). Ein "Media Gateway" für den BSC und ein "Media Gateway" für den MSC. Die Konfigurationsdatei für den OsmoMGW vom BSC heisst "osmo-mgw_ran.cfg". Die Konfigurationsdatei für den OsmoMGW vom MSC heisst "osmo-mgw_cn.cfg".
 
-    $ nano /etc/osmocom/osmo-mgw.cfg
+Zwei leere Konfigurationsdateien für OsmoMGW erstellen:
+
+    $ touch /etc/osmocom/osmo-mgw_cn.cfg
+    $ touch /etc/osmocom/osmo-mgw_ran.cfg
+    
+    $ chown root:root /etc/osmocom/osmo-mgw_cn.cfg
+    $ chown root:root /etc/osmocom/osmo-mgw_ran.cfg
+    
+    $ chmod u=rw,g=r,o=r /etc/osmocom/osmo-mgw_cn.cfg
+    $ chmod u=rw,g=r,o=r /etc/osmocom/osmo-mgw_ran.cfg
+
+    $ ls -alh /etc/osmocom/
+    -rw-r--r-- ... root root ... /etc/osmocom/osmo-mgw_cn.cfg
+    -rw-r--r-- ... root root ... /etc/osmocom/osmo-mgw_ran.cfg
+
+Die Konfigurationsdatei vom OsmoMGW für das MSC mit Konfigurationsparametern befüllen:
+
+    $ nano /etc/osmocom/osmo-mgw_cn.cfg
 
     mgcp
      bind ip 127.0.0.1
+     local ip 127.0.0.1
+     number endpoints 31
+     rtp bind-ip 127.0.0.1
+     rtp port-range 10000 11999
+     rtp-accept-all 1
+     rtp keep-alive 10
+     rtp-patch ssrc
+     rpt-patch timestamp
     line vty
      bind 127.0.0.1
+    log stderr
+     logging filter all 1
+     logging print category 1
+     logging print category-hex 0
+     logging print level 1
+     logging timestamp 0
+     logging level all info
+
+Die Konfigurationsdatei vom OsmoMGW für den BSC mit Konfigurationsparametern befüllen:
+
+    $ nano /etc/osmocom/osmo-mgw_ran.cfg
+
+    mgcp
+     bind ip 127.0.0.2
+     local ip 127.0.0.2
+     number endpoints 31
+     rtp bind-ip 127.0.0.2
+     rtp port-range 12000 13999
+     rtp-accept-all 1
+     rtp keep-alive 10
+     rtp-patch ssrc
+     rpt-patch timestamp
+    line vty
+     bind 127.0.0.2
     log stderr
      logging filter all 1
      logging print category 1
@@ -855,15 +904,24 @@ In der Konfiguarationsdatei von OsmoMGW sind die mit dem Ausrufezeichen "!" ausk
 
 Aus Sicherheitsgründen sollte die Software von OsmoCOM ohne root-Rechte gestartet werden. Deshalb ist der Ersatz aller offiziellen Systemd-Dienste durch eigene, selber erstellte Systemd-Dienste erforderlich.
 
-    $ touch /etc/systemd/system/osmo-mgw_secure.service
-    $ chown root:root /etc/systemd/system/osmo-mgw_secure.service
-    $ chmod u=rw,g=r,o=r /etc/systemd/system/osmo-mgw_secure.service
-    $ ls -alh /etc/systemd/system/osmo-mgw_secure.service
-    -rw-r--r-- ... root root ... /etc/systemd/system/osmo-mgw_secure.service
+    $ touch /etc/systemd/system/osmo-mgw_cn.service
+    $ touch /etc/systemd/system/osmo-mgw_ran.service    
 
-Den eigenen, sicheren Systemd-Dienst editieren:
+    $ chown root:root /etc/systemd/system/osmo-mgw_cn.service
+    $ chown root:root /etc/systemd/system/osmo-mgw_ran.service
+        
+    $ chmod u=rw,g=r,o=r /etc/systemd/system/osmo-mgw_cn.service
+    $ chmod u=rw,g=r,o=r /etc/systemd/system/osmo-mgw_ran.service
 
-    $ nano /etc/systemd/system/osmo-mgw_secure.service
+    $ ls -alh /etc/systemd/system/osmo-mgw_cn.service
+    -rw-r--r-- ... root root ... /etc/systemd/system/osmo-mgw_cn.service
+
+    $ ls -alh /etc/systemd/system/osmo-mgw_ran.service
+    -rw-r--r-- ... root root ... /etc/systemd/system/osmo-mgw_ran.service    
+
+Die eigenen, sicheren Systemd-Dienste editieren. Zuerst den Systemd-Dienst für den OsmoMGW für das MSC:
+
+    $ nano /etc/systemd/system/osmo-mgw_cn.service
 
     [Unit]
     Description=Osmocom Media Gateway (MGW)
@@ -873,7 +931,33 @@ Den eigenen, sicheren Systemd-Dienst editieren:
     User=foo
     Group=foo
     Type=exec
-    ExecStart=/usr/bin/osmo-mgw -c /etc/osmocom/osmo-mgw.cfg
+    ExecStart=/usr/bin/osmo-mgw -c /etc/osmocom/osmo-mgw_cn.cfg
+    Restart=always
+    RestartSec=2
+    OOMPolicy=stop
+
+    # Let it process messages quickly enough
+    CPUSchedulingPolicy=rr
+    CPUSchedulingPriority=2
+    CPUSchedulingResetOnFork=false
+    LimitMEMLOCK=200M
+
+    [Install]
+    WantedBy=multi-user.target
+
+Dann der Systemd-Dienst für den OsmoMGW für den BSC:
+
+    $ nano /etc/systemd/system/osmo-mgw_ran.service
+
+    [Unit]
+    Description=Osmocom Media Gateway (MGW)
+    Documentation=https://osmocom.org/projects/osmo-mgw
+
+    [Service]
+    User=foo
+    Group=foo
+    Type=exec
+    ExecStart=/usr/bin/osmo-mgw -c /etc/osmocom/osmo-mgw_ran.cfg
     Restart=always
     RestartSec=2
     OOMPolicy=stop
@@ -901,38 +985,51 @@ Den offiziellen Systemd-Dienst von OsmoMGW beenden und für immer ausschalten:
     $ systemctl mask osmo-mgw.service
     $ systemctl status osmo-mgw.service
 
-Den eigenen, sicheren Systemd-Dienst einschalten und starten:
+Die eigenen, sicheren Systemd-Dienste einschalten und starten:
 
     $ systemctl daemon-reload
-    $ systemctl status osmo-mgw_secure.service
-    $ systemctl enable osmo-mgw_secure.service
-    $ systemctl start osmo-mgw_secure.service
-    $ systemctl status osmo-mgw_secure.service    
+
+    $ systemctl status osmo-mgw_cn.service
+    $ systemctl enable osmo-mgw_cn.service
+    $ systemctl start osmo-mgw_cn.service
+    $ systemctl status osmo-mgw_cn.service
+
+    $ systemctl status osmo-mgw_ran.service
+    $ systemctl enable osmo-mgw_ran.service
+    $ systemctl start osmo-mgw_ran.service
+    $ systemctl status osmo-mgw_ran.service         
 
 Die Ausgaben von OsmoMGW kontrollieren:
 
-    $ journalctl -b -u osmo-mgw_secure.service     
-
-TODO:
-
-    TODO:
-
-    OsmoBSC benötigt eine eigene Instanz von OsmoMGW. Die Konfiguration
-    der zweiten Instanz von OsmoMGW fehlt in dieser Anleitun! Siehe auch:
-
-    https://osmocom.org/projects/cellular-infrastructure/wiki/Osmocom_Network_In_The_Box#OsmoMGW
+    $ journalctl -b -u osmo-mgw_cn.service     
+    $ journalctl -b -u osmo-mgw_ran.service
 
 #### OsmoSTP
 OsmoSTP kümmert sich um die Kommunikation zwischen den Netzwerkelementen im eigenen 2G/GSM-Mobilfunknetzwerk. Deshalb ist OsmoSTP im eigenen 2G/GSM-Mobilfunknetzwerk zwingend erforderlich. 
 
-Die Konfigurationsdatei von OsmoSTP kann im Originalzustand belassen werden:
+Die Konfigurationsdatei von OsmoSTP ist komplett zu überarbeiten:
 
     $ nano /etc/osmocom/osmo-mgw.cfg
 
     cs7 instance 0
-     xua rkm routing-key-allocation dynamic-permitted
+     asp MSC 4302 2905 m3ua
+      remote-ip 127.0.0.1
+     as MSC m3ua
+      asp MSC
+      routing-key 3 0.23.1 
+     asp BSC 4301 2905 m3ua
+      remote-ip 127.0.0.1
+     as BSC m3ua
+      asp BSC
+      routing-key 2 1.23.3
+     route-table system
+      update route 0.23.1 0.23.1 linkset MSC
+      update route 1.23.3 1.23.3 linkset BSC
+     xua rkm routing-key-allocation static only
      listen m3ua 2905
-      accept-asp-connections dynamic-permitted
+      local-ip 127.0.0.1
+      accept-asp-connections pre-configured
+    
     log stderr
      logging filter all 1   
      logging print category 1
@@ -945,13 +1042,8 @@ Sicherheitswarnung:
 
     Warnung:
 
-    In der OsmoSTP-Konfigurationsdatei ist die Unterstützung von dynamischer 
-    Registrierung (dynamic-permitted) eingeschaltet. Die dynamische Registrierung
-    ist unsicher. Deshalb darf die dynamische Registrierung aus Sicherheitsgründen
-    nur auf der Loopback-Netzwerkschnittstelle eingesetzt werden!
-
-    Beim Einsatz der dynamischen Registrierung sollte mit entsprechenden 
-    Firewallregeln die Nutzung vom Netzwerkprotokoll SCTP auf die Loopback-
+    Aus Sicherheitsgründen sollte mit möglichst strikten Firewall-
+    regeln die Nutzung vom Netzwerkprotokoll SCTP auf die Loopback-
     Netzwerkschnittstelle eingeschränkt werden!
 
 Aus Sicherheitsgründen sollte die Software von OsmoCOM ohne root-Rechte gestartet werden. Deshalb ist der Ersatz aller offiziellen Systemd-Dienste durch eigene, selber erstellte Systemd-Dienste erforderlich.
@@ -1008,15 +1100,6 @@ Die Ausgaben von OsmoSTP kontrollieren:
 
     $ journalctl -b -u osmo-stp_secure.service 
 
-TODO:
-
-    TODO:
-
-    Die Kommunikation auf der Ater-Schnittstelle zwischen OsmoBSC
-    und OsmoMSC funktioniert nicht. Es muss die Konfiguration
-    von OsmoBSC, OsmoMSC und OsmoSTP im cs7-Bereich korrigiert 
-    werden (SS7)!
-
 #### OsmoMSC
 Als nächstes passen wir die Konfigurationsdatei von OsmoMSC an:
 
@@ -1037,11 +1120,22 @@ Als nächstes passen wir die Konfigurationsdatei von OsmoMSC an:
 
      encryption a5 0
 
+    cs7 instance 0
+     point-code 0.23.1
+     asp MSC 2905 4302 m3ua
+      remote-ip 127.0.0.1
+     as MSC m3ua
+      asp MSC
+      routing-key 3 0.23.1
+     
     msc
      # Set this to the IP address which osmo-mgw is listening to:
      # (osmo-mgw provides the media gateway between osmo-bsc and osmo-msc)
      mgw remote-ip 127.0.0.1
      #check-imei-rqd early
+
+    mncc-int
+     default-codec tch-f efr
 
     log stderr
      logging filter all 1
@@ -1109,9 +1203,18 @@ Ein Sicherheitshinweis zur verschlüsselten Kommunikation zwischen Mobiltelefon 
     Bei hohen Sicherheitsansprüchen sollte das eigene 
     Mobilfunknetzwerk mit 4G/LTE oder 5G betrieben werden.    
 
+Nur mit einer unverschlüsselten Kommunikation zwischen Mobilgeräte (ME) und Mobilfunkantenne (BTS) können sich fremde SIM-Karte im eigenen 2G/GSM-Mobilfunknetzwerk einbuchen.   
+https://ethz.ch/content/dam/ethz/special-interest/infk/inst-infsec/system-security-group-dam/education/sown_as15/2015_lecture10.pdf
+
 Zum Betreiben eines eigenen 4G/LTE-Mobilfunknetzwerks eignet sich die Software srsRAN. Eine ausführliche srsRAN-Anleitung zur Installation und Konfiguration eines eigenen 4G/LTE-Mobilfunknetzwerk ist hier erhältlich:
 
 https://github.com/GrandDixence/CoverageMaps/blob/main/Eigenes_Mobilfunknetzwerk/Installations-Anleitung_srsRAN_Ubuntu_20.04.md
+
+Mit dem Block "cs7" ist die SS7-Konfiguartion zu ergänzen. SS7 wird für die Kommunikation zwischen OsmoBSC und OsmoMSC auf der A-Schnittstelle verwendet. Den Konfigurationsparameter "msc-addr" im Block "msc 0" nicht vergessen! Die SS7-Konfiguration ist sehr komplex und fehleranfällig. Deshalb sei hier für die SS7-Konfiguration auf die ausführlichen Kapiteln zu SS7 in den offiziellen OsmoBSC-, OsmoSTP- und OsmoMSC-Bedienungsanleitung verwiesen.
+
+Mit dem Block "mncc-int" wird die Wahl des Audiocodecs ergänzt. Standardmässig soll der Audiocodec "GSM Enhanced Full Rate" (EFR) auf einem vollwertigen physikalischen Kanal (TCH_F) verwendet werden.  
+- https://de.wikipedia.org/wiki/Codec   
+- https://en.wikipedia.org/wiki/Enhanced_full_rate    
 
 Aus Sicherheitsgründen sollte die Software von OsmoCOM ohne root-Rechte gestartet werden. Deshalb ist der Ersatz aller offiziellen Systemd-Dienste durch eigene, selber erstellte Systemd-Dienste erforderlich.
 
@@ -1207,10 +1310,10 @@ Die Konfigurationsdatei von OsmoBSC ist mit Abstand die anspruchvollste und zeit
      handover 0
      bts 0
       type sysmobts
-      band 900
+      band GSM-1800
       location_area_code 1
-      ip.access unit_id 900 1
-      codec-support fr efr amr
+      ip.access unit_id 1800 1
+      codec-support fr efr
       # Uncomment the following for enabling GPRS support:
       #gprs mode gprs
       #gprs nsvc 0 remote ip 127.0.0.1
@@ -1222,33 +1325,43 @@ Die Konfigurationsdatei von OsmoBSC ist mit Abstand die anspruchvollste und zeit
       #
       trx 0
        rf_locked 0
-       arfcn 16
+       arfcn 616
        nominal power 1
        timeslot 0
         phys_chan_config CCCH+SDCCH4
        timeslot 1
-        phys_chan_config TCH/F_PDCH
+        phys_chan_config SDCCH8
        timeslot 2
-        phys_chan_config TCH/F_PDCH
+        phys_chan_config TCH/F
        timeslot 3
-        phys_chan_config TCH/F_PDCH
+        phys_chan_config TCH/F
        timeslot 4
-        phys_chan_config TCH/F_PDCH
+        phys_chan_config TCH/F
        timeslot 5
-        phys_chan_config TCH/F_PDCH
+        phys_chan_config TCH/F
        timeslot 6
-        phys_chan_config TCH/F_PDCH
+        phys_chan_config TCH/F
        timeslot 7
-        phys_chan_config PDCH
+        phys_chan_config TCH/F
     e1_input
      e1_line 0 driver ipa
+    cs7 instance 0
+     point-code 1.23.3
+     asp MSC 2905 4301 m3ua
+      remote-ip 127.0.0.1
+     as MSC m3ua
+      asp MSC
+      routing-key 2 1.23.3
+     sccp-address MSC
+      point-code 0.23.1
     msc 0
-     mgw remote-ip 127.0.0.1
+     msc-addr MSC
+     mgw remote-ip 127.0.0.2
      # If the osmo-mgw instance to be used listens to another port number:
      #mgw remote-port 12427
      #
      allow-emergency deny
-     codec-list fr3 fr2 fr1
+     codec-list fr2
     log stderr
      logging filter all 1
      logging print category 1
@@ -1340,6 +1453,9 @@ Ein Sicherheitshinweis zur verschlüsselten Kommunikation zwischen Mobiltelefon 
 
     Bei hohen Sicherheitsansprüchen sollte das eigene 
     Mobilfunknetzwerk mit 4G/LTE oder 5G betrieben werden.    
+
+Nur mit einer unverschlüsselten Kommunikation zwischen Mobilgeräte (ME) und Mobilfunkantenne (BTS) können sich fremde SIM-Karte im eigenen 2G/GSM-Mobilfunknetzwerk einbuchen.   
+https://ethz.ch/content/dam/ethz/special-interest/infk/inst-infsec/system-security-group-dam/education/sown_as15/2015_lecture10.pdf
 
 Zum Betreiben eines eigenen 4G/LTE-Mobilfunknetzwerks eignet sich die Software srsRAN. Eine ausführliche srsRAN-Anleitung zur Installation und Konfiguration eines eigenen 4G/LTE-Mobilfunknetzwerk ist hier erhältlich:
 
@@ -1490,6 +1606,8 @@ https://www.bag.admin.ch/dam/bag/de/dokumente/str/nis/faktenblaetter-emf/faktenb
 Die Mobilfunkantenne darf die Sendeleistung vom GSM-Funkkanal mit dem Rundfunk-Steuerkanal (BCCH) nicht reduzieren. Der GSM-Funkkanal mit dem Rundfunk-Steuerkanal (BCCH) wird immer mit der vollen Sendeleistung ausgestrahlt!   
 https://osmocom.org/projects/cellular-infrastructure/wiki/GsmPowerControl   
 
+Mit dem Block "cs7" ist die SS7-Konfiguartion zu ergänzen. SS7 wird für die Kommunikation zwischen OsmoBSC und OsmoMSC auf der A-Schnittstelle verwendet. Den Konfigurationsparameter "msc-addr" im Block "msc 0" nicht vergessen! Die SS7-Konfiguration ist sehr komplex und fehleranfällig. Deshalb sei hier für die SS7-Konfiguration auf die ausführlichen Kapiteln zu SS7 in den offiziellen OsmoBSC-, OsmoSTP- und OsmoMSC-Bedienungsanleitung verwiesen.
+
 Mit dem Konfigurationsparameter "allow-emergency" wird die Unterstützung von Notrufen im eigenen 2G/GSM-Mobilfunknetzwerk ausgeschaltet:
 
     msc 0
@@ -1508,12 +1626,12 @@ Wichtiger Hinweis zum Konfigurationsparameter "allow-emergency":
 Die Konfigurationsparametern "codec-support" und "codec-list" regeln die unterstützten Audiocodecs im eigenen 2G/GSM-Mobilfunknetzwerk:
 
     bts 0
-     codec-support fr efr amr
+     codec-support fr efr
     ...
 
     msc 0
      ...
-     codec-list fr3 fr2 fr1
+     codec-list fr3
 
 Es sollten im eigenen 2G/GSM-Mobilfunknetzwerk nur folgende Audiocodecs unterstützt werden:
 
@@ -1531,6 +1649,8 @@ AMR-NB bietet immer die bestmögliche Sprachqualität im eigenen 2G/GSM-Mobilfun
 
 Audiocodecs auf Basis von "Half Rate" (HR) bieten nur schlechtere Sprachqualität als ihre "Full Rate" (FR)-Pendanz. Deshalb solte im eigenen 2G/GSM-Mobilfunknetzwerk die Unterstützung von allen HR-Audiocodecs ausgeschaltet werden. AMR-NB und EFR bieten eine leicht bessere Sprachqualität als "GSM Full Rate" (FR). 
 https://www.elektronik-kompendium.de/sites/kom/1402251.htm
+
+Leider funktioniert in den installierten Versionen der OsmoCOM-Programme die Unterstützung von AMR-NB nicht korrekt. Deshalb wird die Verwendung von EFR konfiguriert.
 
 Aus Sicherheitsgründen sollte die Software von OsmoCOM ohne root-Rechte gestartet werden. Deshalb ist der Ersatz aller offiziellen Systemd-Dienste durch eigene, selber erstellte Systemd-Dienste erforderlich.
 
@@ -1628,8 +1748,8 @@ verwendet werden. Mobilfunkfrequenzbänder > 3.5 GHz werden vom LimeSDR Mini nic
 
 Für Mobilfunkfrequenzbänder im Bereich von 10 MHz bis 2 GHz muss der:
 
-    Empfangspfad: 	RX1_W	=> LNAW
-    Sendepfad:		TX1_2	=> BAND2
+    Empfangspfad:   RX1_W	=> LNAW
+    Sendepfad:      TX1_2	=> BAND2
 
 verwendet werden.
 
@@ -1702,11 +1822,13 @@ Als nächstes packen wir die Konfigurationsdatei von OsmoBTS an:
      osmotrx ip local 127.0.0.1
      osmotrx ip remote 127.0.0.1
     bts 0
-     band 900
-     ipa unit-id 900 1
+     band 1800
+     ipa unit-id 1800 1
      oml remote-ip 127.0.0.1
      trx 0
       phy 0 instance 0
+      #rtp continuous-streaminmg
+      #rtp port-range 14000 15999
     log stderr
      logging filter all 1
      logging print category 1
@@ -1831,6 +1953,10 @@ Fernzugriff auf OsmoMGW starten (VTY):
 
     # telnet 127.0.0.1 4243
 
+Laufende RTP-Datenströme von laufenden Telefongespräche beobachten:
+
+    £ show mgcp stats
+
 #### OsmoSTP
 Fernzugriff auf OsmoSTP starten (VTY):
 
@@ -1858,6 +1984,21 @@ Aktuelle Länge der SMS-Versandwarteschlange:
 
     £ show sms-queue
 
+Ein besonderes "Schmankerl" ist die Möglichkeit von stillen SMS und stillen Telefonanrufe. Stille SMS und stille Telefonanrufe können für die Diagnose eingesetzt werden.   
+- https://nickvsnetworking.com/gsm-with-osmocom-silent-sms-silent-calls/   
+- https://de.wikipedia.org/wiki/Schmankerl   
+
+Stilles SMS an die Telefonnummer (MSISDN) 100 senden:
+
+    $ subscriber msisdn 100 silent-sms sender msisdn 666 send lautlos
+
+Stiller Anruf auf die Telefonnummer (MSISDN) 100 starten:
+
+    $ subscriber msisdn 100 silent-call start any
+
+Stille SMS werden gerne von Polizei und Geheimdiensten zur Personenverfolgung und Personenüberwachung eingesetzt.
+https://de.wikipedia.org/wiki/Stille_SMS
+
 #### OsmoBSC
 Fernzugriff auf OsmoBSC starten (VTY):
 
@@ -1883,7 +2024,13 @@ Diverse Statistiken und Zähler:
     £ show trx
     £ show timeslot
 
-Übersicht über alle aktuell angemeldeten Teilnehmer:
+Übersicht über alle laufenden Telefongespräche:
+
+    £ show lchan summary
+    £ assignment any
+    $ show subscriber all
+
+Details zu allen laufenden Telefongespräche:
 
     £ show conns
 
@@ -1932,6 +2079,7 @@ Kontrolle mit root-Rechten:
 
     $ ss --sctp --udp --tcp --listening --numeric --process |grep -i osmo
     Netid 	State		Recv-Q		Send-Q		Local Adddress:Port		Peer Address:Port 		Process
+    udp		UNCONN		...			...			127.0.0.2:2427			0.0.0.0:*				users:(("osmo-mgw", ...))
     udp		UNCONN		...			...			127.0.0.1:2427			0.0.0.0:*				users:(("osmo-mgw", ...))
     tcp		LISTEN		...			...			127.0.0.1:4249			0.0.0.0:*				users:(("osmo-bsc", ...))
     tcp		LISTEN		...			...			0.0.0.0:3002			0.0.0.0:*				users:(("osmo-bsc", ...))
@@ -1947,17 +2095,18 @@ Kontrolle mit root-Rechten:
     tcp		LISTEN		...			...			127.0.0.1:4239			0.0.0.0:*				users:(("osmo-stp", ...))
     tcp		LISTEN		...			...			127.0.0.1:4241			0.0.0.0:*				users:(("osmo-bts-trx", ...))            
     tcp		LISTEN		...			...			127.0.0.1:4242			0.0.0.0:*				users:(("osmo-bsc", ...))  
+    tcp		LISTEN		...			...			127.0.0.2:4243			0.0.0.0:*				users:(("osmo-mgw", ...))
     tcp		LISTEN		...			...			127.0.0.1:4243			0.0.0.0:*				users:(("osmo-mgw", ...))      
     tcp		LISTEN		...			...			0.0.0.0:2775			0.0.0.0:*				users:(("osmo-msc", ...))  
     sctp 	LISTEN		...			...		    127.0.0.1:2905		    0.0.0.0:*				users:(("osmo-stp", ...))
 
-Kommen die SCTP-Netzwerkverbindungen zwischen OmsoBSC und OsmoMSC zustande?
+Kommen alle für den Betrieb des eigenen 2G/GSM-Mobilfunknetzwerks erforderlichen SCTP-Netzwerkverbindungen zustande?
   
     $ ss --sctp --numeric --process
     State		Recv-Q		Send-Q		Local Address:Port		Peer Address:Port		Process
-    ESTAB		...			...			127.0.0.1:...		    127.0.0.1:2905          users:(("osmo-bsc", ...)) 
+    ESTAB		...			...			127.0.0.1:4302		    127.0.0.1:2905          users:(("osmo-bsc", ...)) 
     ...
-    ESTAB	    0			0			127.0.0.1:...		    127.0.0.1:2905		    users:(("osmo-msc", ...))
+    ESTAB	    0			0			127.0.0.1:4301		    127.0.0.1:2905		    users:(("osmo-msc", ...))
     ...
 
 Kommen alle für den Betrieb des eigenen 2G/GSM-Mobilfunknetzwerks erforderlichen UDP-Netzwerkverbindungen zustande?
@@ -1983,6 +2132,43 @@ Kommen alle für den Betrieb des eigenen 2G/GSM-Mobilfunknetzwerks erforderliche
     ESTAB       ...         ...         127.0.0.1:...           127.0.0.1:3002          users:(("osmo-bts-trx", ...))
     ESTAB       ...         ...         127.0.0.1:...           127.0.0.1:4222          users:(("osmo-msc", ...))
     ESTAB       ...         ...         127.0.0.1:...           127.0.0.1:3003          users:(("osmo-bts-trx", ...))    
+
+Für die Kommunikation zwischen:
+
+- BSC und MSC auf der Schnittstelle A 
+
+wird SS7 mit dem Netzwerkprotokoll SCTP eingesetzt.    
+https://de.wikipedia.org/wiki/Signalling_System_7   
+
+Die Konfiguration von SS7 ist sehr komplex und sehr fehleranfällig. Deshalb müssen alle SS7-Verbindungen auf ihre korrekte Funktion geprüft werden. Eine SS7-Verbindungsaufbau wird an den Initiator der SS7-Verbindung mit der Meldung "RESET ACK" gemeldet. 
+
+Wenn zum Beispiel das Programm OsmoBSC keine Meldung "RESET ACK" vom MSC erhält, ist die SS7-Verbindung zwischen OsmoBSC und OsmoMSC (A) nicht in einem funktionstüchtigen Zustand.
+
+    $ journalctl -b -u osmo-bsc_secure.service |grep -i "RESET ACK from MSC"
+    => ... osmo-bsc[...]: DMSC NOTICE ... RESET ACK from MSC: RI=SSN_PC,PC=0.23.1,SSN=BSSAP
+
+Wenn eine SS7-Verbindung nicht funktioniert, muss die Konfiguration der beiden betroffenen OsmoCOM-Programme und von OsmoSTP kontrolliert werden. Fast alle SS7-Konfigurationsparametern befinden sich im Block "cs7". Folgende für die SS7-Konfiguration relevanten Konfigurationsparametern ausserhalb des Blocks "cs7" dürfen bei der Kontrolle nicht vergessen werden:
+
+- OsmoBSC:  "msc-addr" im Block "msc 0"
+
+Im Fehlerfall sollte mit Telnet auf der VTY-Schnittstelle der beiden betroffenen OsmoCOM-Programme die aktuelle SS7-Konfiguration und deren aktuellen Verbindungszustände geprüft werden:
+
+Alle OsmoCOM-Programme mit Unterstützung für SS7-Verbindungen:
+
+    £ show cs7 instance <Instanznummer> asp
+    => ... ASP_ACTIVE ...
+
+    £ show cs7 instance <Instanznummer> as m3ua
+    => ... AS_ACTIVE ...
+
+Nur OsmoSTP:
+
+    $ show cs7 m3ua
+    => xUA server for m3ua on 0.0.0.0:2905
+
+    $ show cs7 instance <Instanznummer> route
+    => ... as-rkm-3 ...
+    => ... as-rkm-2 ...
 
 #### Firewallregeln kontrollieren
 Funktionieren die SCTP-Firewallregeln einwandfrei?
@@ -2010,15 +2196,15 @@ In den Ausgaben vom Programm OsmoTRX ist zu kontrollieren, ob die korrekten Send
 
     $ journalctl -u osmo-trx_secure.service |grep -i Antennas
     
-    Empfangspfad: 	RX1_H	=> OsmoTRX-Ausgabe: Rx antennas......... LNAH
-    Sendepfad:		TX1_1	=> OsmoTRX-Ausgabe:	Tx antennas......... BAND1
+    Empfangspfad:   RX1_H	=> OsmoTRX-Ausgabe: Rx antennas......... LNAH
+    Sendepfad:      TX1_1	=> OsmoTRX-Ausgabe:	Tx antennas......... BAND1
 
 verwendet werden. Mobilfunkfrequenzbänder > 3.5 GHz werden vom LimeSDR Mini nicht unterstützt. 
 
 Für Mobilfunkfrequenzbänder im Bereich von 10 MHz bis 2 GHz muss der:
 
-    Empfangspfad: 	RX1_W	=> OsmoTRX-Ausgabe:  Rx antennas........ LNAW
-    Sendepfad:		TX1_2	=> OsmoTRX-Ausgabe:	 Tx antennas........ BAND2
+    Empfangspfad:   RX1_W	=> OsmoTRX-Ausgabe:  Rx antennas........ LNAW
+    Sendepfad:      TX1_2	=> OsmoTRX-Ausgabe:	 Tx antennas........ BAND2
 
 verwendet werden.
 
@@ -2067,19 +2253,94 @@ Ich verbinde den zweiten SDR per USB-Kabel mit einem Laptop. Auf dem Laptop läu
 
 Befindet sich das vom LimeSDR Mini ausgestrahlte Mobilfunksignal im gewünschten Frequenzbereich? Ist die Signalspitze von jedem GSM-Funkkanal genau bei der konfigurierten Mittenfrequenz?
 
+#### Teilnehmerdatenbank befüllen
+Damit ein Mobiltelefon sich in das eigene 2G/GSM-Mobilfunknetzwerk einbuchen kann, muss die SIM-Kartennummer (IMSI) der im Mobiltelefon eingelegten SIM-Karte in der Teilnehmerdatenbank (HLR) vom eigenen 2G/GSM-Mobilfunknetzwerk hinterlegt sein.   
+https://de.wikipedia.org/wiki/International_Mobile_Subscriber_Identity 
+
+Leider unterstützt die installierte Version von OsmoHLR den Konfigurationsparameter "subscriber-create-on-demand" nicht. Dieser OsmoHLR-Konfigurationsparameter erlaubt das Einschalten der Funktion "Subscribers Create on Demand Feature". Mit dieser Funktion werden alle fremden SIM-Karten, mit welchen ein Mobiltelefon versucht, sich in das eigene 2G/GSM-Mobilfunknetzwerk einzubuchen, automatisch in der Teilnehmerdatenbank (HLR) gespeichert. 
+
+Die Konfigurationskniffe, welche das Einbuchen von fremden SIM-Karten in das eigene 2G/GSM-Mobilfunknetzwerk erlauben, sind ausführlich im Kapitel 6.3 - "Configuring the Subscribers Create on Demand Feature" der OsmoHLR-Bedienungsanleitung beschrieben.
+
+Ohne die Funktion "Subscribers Create on Demand Feature" müssen alle im eigenen 2G/GSM-Mobilfunknetzwerk zugelassenen SIM-Karten händisch in der Teilnehmerdatenbank eingetragen werden. 
+
+Bevor die SIM-Karte in der Teilnehmerdatenbank registriert werden kann, muss deren SIM-Kartennummer (IMSI) festgestellt werden. Das geht am einfachsten über die Programmausgaben von OsmoHLR:
+
+    $ journalctl -b -u osmo-hlr |grep -i "No such subscriber"
+    => ... Cannot read subscriber from db: IMSI='228991234567890': No such subscriber
+
+SIM-Kartennummer notieren. Als nächstes wird diese neue SIM-Karte in der Teilnehmerdatenbank (HLR) eingetragen. In der Teilnehmerdatenbank wird die SIM-Kartennummer (IMSI) eingetragen. Für die Sprachtelefonie sollte jeder in der Teilnehmerdatenbank eingetragenen SIM-Karte eine Telefonnummer (MSISDN) zugewiesen werden.   
+https://de.wikipedia.org/wiki/Mobile_Subscriber_ISDN_Number   
+
+Für die Pflege der Teilnehmerdatenbank (HLR) die VTY-Schnittstelle von OsmoHLR starten:
+
+    # telnet 127.0.0.1 4258
+
+Bearbeitungsmodus einschalten:
+
+    £ enable
+
+Neue SIM-Karte in der Teilnehmerdatenbank eintragen:
+
+    £ subscriber imsi 228991234567890 create
+
+Telefonnummer (MSISDN) der neuen SIM-Karte zuweisen. Im Beispiel wird der neuen SIM-Karte die Telefonnummer "100" zugewiesen:
+
+    £ subscriber imsi 228991234567890 update msisdn 100
+
+Achtung: 
+
+    Achtung: 
+
+    Eine gültige Telefonnummer (MSISDN) besteht aus mindestens 3 Ziffern!
+
+Neuer Eintrag in der Teilnehmerdatenbank kontrollieren:
+
+    £ subscriber imsi 228991234567890 show
+
+Telnet-Sitzung zu OsmoHLR schliessen:
+
+    £ exit
+
+Mobiltelefon neustarten! Eventuell muss auch der Rechner neugestartet werden!
+
+#### Einbuchen ins eigene Mobilfunknetzwerk testen
+In den Einstellungen vom Mobiltelefon den "Nur 2G/GSM"-Modus einschalten. Mit dieser Einstellung wird das Mobiltelefon zum Einbuchen in ein 2G/GSM-Mobilfunknetzwerk gezwungen. Diese Einstellung befindet sich bei Smartphones mit dem Betriebssystem Android unter:
+
+Einstellungen (Zahnrad) > Verbindungen > Mobile Netzwerke > Netzmodus 
+
+In Ländern, wo mindestens ein öffentlicher Mobilfunkanbieter noch ein 2G/GSM-Mobilfunknetzwerk betreibt, muss mit der manuellen Netzwerkwahl das Mobiltelefon zum Einbuchen in das eigene 2G/GSM-Mobilfunknetzwerk forciert werden. Die manuelle Netzwerkwahl befindet sich auf Android-Smartphones unter:
+
+- Einstellungen (Zahnrad) > Verbindungen > Mobile Netzwerke > Netzbetreiber
+- Regler "Automatisch wählen" nach links schieben
+- Unter "Verfügbare Netzwerke" das eigene 2G/GSM-Mobilfunknetzwerk auswählen
+
+Mit dem USSD-Code:
+
+    *#100#
+
+die Telefonnummer (MSISDN) der SIM-Karte im eigenen 2G/GSM-Mobilfunknetzwerk abfragen.   
+https://de.wikipedia.org/wiki/USSD-Codes
+
+#### SMS-Versand testen
+Mit OsmoMSC eine SMS an die neue SIM-Karte senden:
+
+    # telnet 127.0.0.1 4254
+
+    £ subscriber msisdn 100 sms sender msisdn 666 send Willkommen im eigenen 2G/GSM-Mobilfunknetzwerk!
+
+Wenn sich das Mobiltelefon erfolgreich im eigenen 2G/GSM-Mobilfunknetzwerk anmelden kann, erhält es automatisch diese SMS vom OsmoMSC.
+
+Zweites Mobiltelefon in der Teilnehmerdatenbank mit der Telefonnummer 200 registrieren.
+
+SMS zwischen den beiden Mobiltelefone versenden. Zieladresse ist die Telefonnummer 100 respektive 200.
+
 ## Fehlende Schritte
 In dieser Anleitung fehlen (noch) folgende Anweisungen:
 
 TODO:
 
     TODO:
-    - Anleitung ergänzen um den Schritt der Befüllung 
-      der Teilnehmerdatenbank (HLR).
-
-    - Konfiguration der RTP-Ports von OsmoMGW. 
-
-    - Ergänzung zahlreicher, eventuell für die Diagnose hilfreicher
-      Befehle auf der VTY-Schnittstelle (Telnet).
+    - Sprachtelefonie zwischen zweier Mobiltelefone.
 
     - Ein eigener Benutzer ohne root-Rechte für jeden einzelnen Systemd-Dienste
       erstellen und alle selber erstellten Systemd-Dienste mit diesen neuen 
@@ -2127,5 +2388,3 @@ TODO:
     
     - "Traffic Shaper" für die Weiterleitung der Datenpakete aus dem eigenen
       Mobilfunknetzwerk ins Internet.
-    
-    - Beschreib der Netzwerkanmeldung mit einem modernen, Android-Smartphone.
