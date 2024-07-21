@@ -280,19 +280,13 @@ Die Netzabdeckungskarte wird vom JavaScript OpenLayers aus der in der HTML-
 Datei in der Zeile:
 
 ```
-url: 'file:///tmp/coveragemap.png',
+url: 'coveragemap.png',
 ```
 
 angegebene Grafikdatei `(*.png)` geladen. Im abgebildeten Beispiel ist dies die 
-Grafikdatei unter:
-
-```
-/tmp/coveragemap.png
-```
-
-welche lokal auf dem Linux-Rechner abgelegt wurde (SSD oder Festplatte). Die 
-Grafikdatei Coveragemap.png sollte die mit Signal-Server berechnete 
-Netzabdeckungskarte enthalten.
+Grafikdatei "coveragemap.png" im Verzeichnis der HTML-Datei. Die Grafikdatei 
+"coveragemap.png" sollte die mit Signal-Server berechnete Netzabdeckungskarte 
+enthalten.
 
 Diese url-Zeile kann in der HTML-Datei den eigenen Wünschen entsprechend 
 angepasst werden. Beim Einsatz des Webbrowsers Firefox sind die Hinweise unter:
