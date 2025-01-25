@@ -2240,16 +2240,31 @@ Beim ersten Testlauf sollte kontrolliert werden, ob die funkregulatorischen Anfo
 - https://wiki.analog.com/university/tools/pluto/drivers/windows#windows_drivers   
 - https://www.rtl-sdr.com/plutosdr-quickstart-guide/   
 
-Wird das Mobilfunksignal des eigenen 2G/GSM-Mobilfunksignals nur in einem Mobilfunkfrequenzband < 1000 MHz ausgestrahlt, kann als zweite SDR-Hardware der billigere RTL-SDR Blog V3 oder der RTL-SDR Blog V4 eingesetzt werden.   
-- https://www.rtl-sdr.com/buy-rtl-sdr-dvb-t-dongles/   
-- https://www.rtl-sdr.com/rtl-sdr-blog-v4-dongle-initial-release/   
-- https://www.rtl-sdr.com/rtl-sdr-quick-start-guide/   
-- https://www.rtl-sdr.com/manual-installation-of-sdr/   
+Wird der PlutoSDR nur als Spektrumanalysator eingesetzt, empfiehlt sich der Einsatz von Maia SDR auf dem PlutoSDR. Für Maia SDR muss auf dem PlutoSDR eine angepasste Firmware installiert werden. 
 
-Ich verbinde den zweiten SDR per USB-Kabel mit einem Laptop. Auf dem Laptop läuft das Betriebssystem MS Windows 10 und die SDR-Software "SDR Console":    
-- https://www.sdr-radio.com/Console   
-- https://www.sdr-radio.com/pluto   
-- https://www.sdr-radio.com/rtl-dongles   
+- https://maia-sdr.org/
+- https://pysdr.org/content/pluto.html#maia-sdr-and-iqengine
+- https://github.com/maia-sdr/plutosdr-fw
+
+Bei der Frequenzanalyse von breitbandigen Funksignalen entsteht durch die schnellen Fourier-Transformationen (FFT) eine sehr grosse Rechenlast. Diese grosse Rechenlast wird beim Einsatz von Maia SDR von der CPU auf den sehr energieeffizient und lüfterlos arbeitenden FPGA des PlutoSDR ausgelagert.  
+
+- https://de.wikipedia.org/wiki/Spektrumanalysator
+
+Mit Maia SDR kann das vom PlutoSDR empfangene Funksignal im (Datei-)Format SigMF aufgezeichnet werden. 
+
+- https://pysdr.org/content/iq_files.html
+- https://github.com/sigmf/SigMF
+- https://apps.dtic.mil/sti/trecms/pdf/AD1194292.pdf
+
+Im SigMF-Format aufgezeichnete Funksignale können mit dem Programm Inspectrum betrachtet werden.
+
+- https://github.com/miek/inspectrum
+- https://pysdr.org/content/iq_files.html#visually-analyzing-an-rf-file
+
+Die Installation und der Einsatz von Maia SDR ist in diesen Anleitungen und Videos ausführlich beschrieben:
+
+- https://maia-sdr.org/installation/
+- https://www.youtube.com/watch?v=4FneUuQhvkc
 
 Befindet sich das vom LimeSDR Mini ausgestrahlte Mobilfunksignal im gewünschten Frequenzbereich? Ist die Signalspitze von jedem GSM-Funkkanal genau bei der konfigurierten Mittenfrequenz?
 
